@@ -1,7 +1,3 @@
-import controllers.TacheController;
-import models.TacheRepository;
-import views.*;
-
 /**
  * Point d'entrée de l'application.
  */

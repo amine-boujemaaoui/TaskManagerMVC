@@ -17,7 +17,7 @@ public class TacheController extends AbstractController {
      * Constructeur pour initialiser le contrôleur avec le modèle et la vue.
      *
      * @param tacheRepository le référentiel de tâches utilisé par le contrôleur.
-     * @param mainView la vue principale associée à ce contrôleur.
+     * @param mainView        la vue principale associée à ce contrôleur.
      */
     public TacheController(TacheRepository tacheRepository, MainView mainView) {
         this.tacheRepository = tacheRepository;
@@ -25,10 +25,9 @@ public class TacheController extends AbstractController {
     }
 
     /**
-     * Gère une action utilisateur spécifique.
+     * Implémente la méthode héritée pour gérer les actions utilisateur spécifiques.
      *
      * @param action une chaîne représentant l'action utilisateur.
-     *               Exemples : "ajouter", "supprimer", etc.
      */
     @Override
     public void handleRequest(String action) {
@@ -39,8 +38,37 @@ public class TacheController extends AbstractController {
             case "supprimer":
                 supprimerTache();
                 break;
+            case "afficher":
+                updateView();
+                break;
             default:
                 System.out.println("Action non reconnue : " + action);
+        }
+    }
+
+    /**
+     * Démarre la boucle principale pour gérer les interactions utilisateur.
+     */
+    public void start() {
+        boolean running = true;
+        while (running) {
+            updateView(); // Affiche la vue principale
+            String input = getUserInput(); // Capture l'entrée utilisateur
+
+            switch (input) {
+                case "1":
+                    handleRequest("ajouter");
+                    break;
+                case "2":
+                    handleRequest("supprimer");
+                    break;
+                case "3":
+                    running = false;
+                    System.out.println("Au revoir !");
+                    break;
+                default:
+                    System.out.println("Commande non reconnue. Essayez encore.");
+            }
         }
     }
 
@@ -63,32 +91,27 @@ public class TacheController extends AbstractController {
 
     /**
      * Ajoute une nouvelle tâche au référentiel.
-     * Les informations sont demandées à l'utilisateur via le terminal.
      */
     public void ajouterTache() {
-        System.out.print("Entrez le titre de la tâche : ");
-        String titre = new java.util.Scanner(System.in).nextLine();
-        System.out.print("Entrez la description : ");
-        String description = new java.util.Scanner(System.in).nextLine();
+        String titre = mainView.getTitreTache(); // Demande à la vue d'obtenir le titre
+        String description = mainView.getDescriptionTache(); // Demande à la vue d'obtenir la description
 
         Tache tache = new Tache(titre, description);
-        tacheRepository.ajouterTache(tache);
-        System.out.println("Tâche ajoutée !");
+        tacheRepository.ajouterTache(tache); // Ajoute la tâche au modèle
+        mainView.afficherMessage("Tâche ajoutée !"); // Notifie l'utilisateur via la vue
     }
 
     /**
      * Supprime une tâche existante en fonction de son index.
-     * L'index est demandé à l'utilisateur via le terminal.
      */
     public void supprimerTache() {
-        System.out.print("Entrez l'index de la tâche à supprimer : ");
-        int index = Integer.parseInt(new java.util.Scanner(System.in).nextLine());
+        int index = mainView.getIndexTache(); // Demande à la vue de récupérer l'index
 
         if (index >= 0 && index < tacheRepository.getToutesLesTaches().size()) {
-            tacheRepository.supprimerTache(tacheRepository.getToutesLesTaches().get(index));
-            System.out.println("Tâche supprimée !");
+            tacheRepository.supprimerTache(tacheRepository.getToutesLesTaches().get(index)); // Supprime la tâche
+            mainView.afficherMessage("Tâche supprimée !"); // Notifie l'utilisateur via la vue
         } else {
-            System.out.println("Index invalide.");
+            mainView.afficherMessage("Index invalide."); // Notifie l'utilisateur en cas d'erreur
         }
     }
 }

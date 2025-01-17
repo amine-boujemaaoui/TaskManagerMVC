@@ -7,15 +7,29 @@ import java.util.Scanner;
  */
 public class CommandPanelView extends AbstractView {
 
+    private final Scanner scanner; // Scanner partagé
+
+    /**
+     * Constructeur pour initialiser la vue avec un scanner partagé.
+     *
+     * @param scanner le scanner partagé pour les entrées utilisateur.
+     */
+    public CommandPanelView(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
     /**
      * Affiche les commandes disponibles à l'utilisateur.
      */
     @Override
     public void display() {
-        System.out.println("\n--- Commandes ---");
-        System.out.println("1. Ajouter une tâche");
-        System.out.println("2. Supprimer une tâche");
-        System.out.println("3. Quitter");
+        System.out.println("┌" + "─".repeat(30) + "┐");
+        System.out.println("│ Commandes disponibles        │");
+        System.out.println("├" + "─".repeat(30) + "┤");
+        System.out.println("│ 1. Ajouter une tâche         │");
+        System.out.println("│ 2. Supprimer une tâche       │");
+        System.out.println("│ 3. Quitter                   │");
+        System.out.println("└" + "─".repeat(30) + "┘");
     }
 
     /**
@@ -26,7 +40,6 @@ public class CommandPanelView extends AbstractView {
     @Override
     public String getInput() {
         System.out.print("\nEntrez une commande : ");
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+        return scanner.nextLine(); // Utilise le scanner partagé
     }
 }
