@@ -18,12 +18,12 @@ public class Application {
 
         Scanner scanner = new Scanner(System.in); // Scanner partagé
 
-        TacheRepository tacheRepository = new TacheRepository();
+        TacheRepository tacheRepository = new TacheRepository("save.json");
 
         ListeTachesView listeTachesView = new ListeTachesView(tacheRepository.getToutesLesTaches());
         MainView mainView = new MainView(listeTachesView, new CommandPanelView(scanner));
 
-        tacheRepository.addObserver(listeTachesView); // Enregistrement de la vue comme observateur
+        tacheRepository.addObserver(listeTachesView);
 
         this.tacheController = new TacheController(tacheRepository, mainView);
     }

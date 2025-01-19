@@ -1,5 +1,8 @@
 package views;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 /**
@@ -91,6 +94,28 @@ public class MainView extends AbstractView {
             System.out.println("Entrée invalide. Veuillez entrer un nombre.");
             return -1; // Retourne une valeur invalide pour signaler une erreur
         }
+    }
+
+    public LocalDate getEcheance() {
+        System.out.print("Entrez la date d'échéance (format: AAAA-MM-JJ) ou laissez vide pour aucune : ");
+        String input = scanner.nextLine();
+
+        if (input.trim().isEmpty()) {
+            return null; // Pas de date d'échéance
+        }
+
+        try {
+            return LocalDate.parse(input.trim(), DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            System.out.println("Format invalide. Veuillez entrer une date au format AAAA-MM-JJ.");
+            return getEcheance(); // Relance la saisie
+        }
+    }
+
+    public boolean getStatut() {
+        System.out.print("Marquer la tâche comme terminée ? (oui/non) : ");
+        String input = scanner.nextLine().trim().toLowerCase();
+        return input.equals("oui"); // Retourne true si l'utilisateur tape "oui", sinon false
     }
 
     /**

@@ -23,7 +23,22 @@ public class Tache {
         this.titre = titre;
         this.description = description;
         this.echeance = null; // Par défaut, pas de date d'échéance
-        this.statut = false;  // Par défaut, la tâche n'est pas terminée
+        this.statut = false; // Par défaut, la tâche n'est pas terminée
+    }
+    
+    /**
+     * Constructeur pour créer une nouvelle tâche.
+     *
+     * @param titre       le titre de la tâche.
+     * @param description la description de la tâche.
+     * @param echeance    la date d'échéance de la tâche, peut être null.
+     * @param statut      le statut de la tâche (terminée ou non).
+     */
+    public Tache(String titre, String description, LocalDate echeance, boolean statut) {
+        this.titre = titre;
+        this.description = description;
+        this.echeance = echeance; // Peut être null
+        this.statut = statut;
     }
 
     /**

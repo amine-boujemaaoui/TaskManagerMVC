@@ -28,7 +28,8 @@ public class CommandPanelView extends AbstractView {
         System.out.println("├" + "─".repeat(30) + "┤");
         System.out.println("│ 1. Ajouter une tâche         │");
         System.out.println("│ 2. Supprimer une tâche       │");
-        System.out.println("│ 3. Quitter                   │");
+        System.out.println("│ 3. Modifier une tâche        │"); // Nouvelle commande
+        System.out.println("│ 4. Quitter                   │");
         System.out.println("└" + "─".repeat(30) + "┘");
     }
 

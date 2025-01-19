@@ -1,5 +1,7 @@
 package controllers;
 
+import java.time.LocalDate;
+
 import models.Tache;
 import models.TacheRepository;
 import views.MainView;
@@ -38,6 +40,9 @@ public class TacheController extends AbstractController {
             case "supprimer":
                 supprimerTache();
                 break;
+            case "modifier":
+                modifierTache(); // Nouvelle méthode
+                break;
             case "afficher":
                 updateView();
                 break;
@@ -63,6 +68,9 @@ public class TacheController extends AbstractController {
                     handleRequest("supprimer");
                     break;
                 case "3":
+                    handleRequest("modifier"); // Nouvelle commande
+                    break;
+                case "4":
                     running = false;
                     System.out.println("Au revoir !");
                     break;
@@ -114,4 +122,25 @@ public class TacheController extends AbstractController {
             mainView.afficherMessage("Index invalide."); // Notifie l'utilisateur en cas d'erreur
         }
     }
+
+    public void modifierTache() {
+        try {
+            // Récupération des données de la vue
+            int index = mainView.getIndexTache(); // Récupère l'index
+            String nouveauTitre = mainView.getTitreTache(); // Récupère le nouveau titre
+            String nouvelleDescription = mainView.getDescriptionTache(); // Récupère la nouvelle description
+            LocalDate nouvelleDateEcheance = mainView.getEcheance(); // Récupère la nouvelle date d'échéance
+            boolean nouveauStatut = mainView.getStatut(); // Récupère le statut choisi par l'utilisateur
+
+            // Modification dans le modèle
+            tacheRepository.modifierTache(index, nouveauTitre, nouvelleDescription, nouvelleDateEcheance,
+                    nouveauStatut);
+
+            mainView.afficherMessage("Tâche modifiée avec succès !");
+        } catch (IllegalArgumentException e) {
+            mainView.afficherMessage("Erreur : " + e.getMessage());
+        }
+    }
+
+
 }

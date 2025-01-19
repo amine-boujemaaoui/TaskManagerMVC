@@ -23,33 +23,56 @@ public class ListeTachesView extends AbstractView implements ModelObserver {
 
     @Override
     public void display() {
-        int taille = 56;
-        int colWidth = (taille - 6) / 2;
+        int taille = 90; // Ajuster la largeur totale
+        int colIdWidth = 4;
+        int colTitleWidth = 20;
+        int colDescWidth = 30;
+        int colDateWidth = 15;
+        int colStatusWidth = 15;
 
         String titre = " Liste des tâches à faire (" + taches.size() + ")";
-        String aucun = " Aucune tâche à afficher.";
         String title = " Title";
         String description = " Description";
+        String dateEcheance = " Due Date";
+        String status = " Status";
 
-        System.out.println("┌" + "─".repeat(taille) + "┐");
-        System.out.println("│" + titre + " ".repeat(taille - titre.length()) + "│");
-        
-        System.out.println("├" + "────" + "┬" + "─".repeat(colWidth) + "┬" + "─".repeat(colWidth) + "┤");
-        System.out.println("│" + " id " + "│" + title + " ".repeat(colWidth - title.length()) + "│" + description + " ".repeat(colWidth - description.length()) + "│");
-        System.out.println("├" + "────" + "┼" + "─".repeat(colWidth) + "┼" + "─".repeat(colWidth) + "┤");
+        System.out.println("┌" + "─".repeat(taille - 2) + "┐");
+        System.out.println("│" + titre + " ".repeat(taille - titre.length() - 2) + "│");
+
+        System.out.println("├" + "─".repeat(colIdWidth) + "┬" + "─".repeat(colTitleWidth) + "┬"
+                + "─".repeat(colDescWidth) + "┬" + "─".repeat(colDateWidth) + "┬" + "─".repeat(colStatusWidth) + "┤");
+        System.out.println("│ id │" + title + " ".repeat(colTitleWidth - title.length()) + "│" + description
+                + " ".repeat(colDescWidth - description.length()) + "│" + dateEcheance
+                + " ".repeat(colDateWidth - dateEcheance.length()) + "│" + status
+                + " ".repeat(colStatusWidth - status.length()) + "│");
+        System.out.println("├" + "─".repeat(colIdWidth) + "┼" + "─".repeat(colTitleWidth) + "┼"
+                + "─".repeat(colDescWidth) + "┼" + "─".repeat(colDateWidth) + "┼" + "─".repeat(colStatusWidth) + "┤");
 
         if (taches.isEmpty()) {
             for (int i = 0; i < 5; i++) {
-                System.out.println("│" + "    " + "│" + " ".repeat(colWidth) + "│" + " ".repeat(colWidth) + "│");
+                System.out.println(
+                        "│" + " ".repeat(colIdWidth) + "│" + " ".repeat(colTitleWidth) + "│" + " ".repeat(colDescWidth)
+                                + "│" + " ".repeat(colDateWidth) + "│" + " ".repeat(colStatusWidth) + "│");
             }
-        } else { 
+        } else {
             for (int i = 0; i < taches.size(); i++) {
                 Tache tache = taches.get(i);
                 String id = String.format("%2d", i);
-                System.out.println("│ " + id + " │ " + tache.getTitre() + " ".repeat(colWidth - tache.getTitre().length() - 1) + "│ " + tache.getDescription() + " ".repeat(colWidth - tache.getDescription().length() - 1) + "│");
+                String titreTache = tache.getTitre();
+                String descTache = tache.getDescription();
+                String echeance = tache.getEcheance() != null ? tache.getEcheance().toString() : "N/A";
+                String statut = tache.isStatut() ? "Done" : "In Progress";
+
+                System.out.println(
+                        "│ " + id + " │ "
+                                + titreTache + " ".repeat(colTitleWidth - titreTache.length() - 1) + "│ "
+                                + descTache + " ".repeat(colDescWidth - descTache.length() - 1) + "│ "
+                                + echeance + " ".repeat(colDateWidth - echeance.length() - 1) + "│ "
+                                + statut + " ".repeat(colStatusWidth - statut.length() - 1) + "│");
             }
         }
 
-        System.out.println("└" + "────" + "┴" + "─".repeat(colWidth) + "┴" + "─".repeat(colWidth) + "┘");
+        System.out.println("└" + "─".repeat(colIdWidth) + "┴" + "─".repeat(colTitleWidth) + "┴"
+                + "─".repeat(colDescWidth) + "┴" + "─".repeat(colDateWidth) + "┴" + "─".repeat(colStatusWidth) + "┘");
     }
 }
