@@ -1,6 +1,7 @@
 package controllers;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import models.Tache;
 import models.TacheRepository;
@@ -10,7 +11,7 @@ import views.MainView;
  * Contrôleur pour gérer les interactions entre le modèle TacheRepository
  * et les vues liées aux tâches.
  */
-public class TacheController extends AbstractController {
+public class TacheController {
 
     private final TacheRepository tacheRepository;
     private final MainView mainView;
@@ -27,31 +28,6 @@ public class TacheController extends AbstractController {
     }
 
     /**
-     * Implémente la méthode héritée pour gérer les actions utilisateur spécifiques.
-     *
-     * @param action une chaîne représentant l'action utilisateur.
-     */
-    @Override
-    public void handleRequest(String action) {
-        switch (action) {
-            case "ajouter":
-                ajouterTache();
-                break;
-            case "supprimer":
-                supprimerTache();
-                break;
-            case "modifier":
-                modifierTache(); // Nouvelle méthode
-                break;
-            case "afficher":
-                updateView();
-                break;
-            default:
-                System.out.println("Action non reconnue : " + action);
-        }
-    }
-
-    /**
      * Démarre la boucle principale pour gérer les interactions utilisateur.
      */
     public void start() {
@@ -62,13 +38,13 @@ public class TacheController extends AbstractController {
 
             switch (input) {
                 case "1":
-                    handleRequest("ajouter");
+                    ajouterTache();
                     break;
                 case "2":
-                    handleRequest("supprimer");
+                    supprimerTache();
                     break;
                 case "3":
-                    handleRequest("modifier"); // Nouvelle commande
+                    modifierTache(); // Nouvelle commande
                     break;
                 case "4":
                     running = false;
@@ -83,7 +59,6 @@ public class TacheController extends AbstractController {
     /**
      * Met à jour la vue principale en affichant l'état actuel des tâches.
      */
-    @Override
     public void updateView() {
         mainView.display();
     }
@@ -101,46 +76,55 @@ public class TacheController extends AbstractController {
      * Ajoute une nouvelle tâche au référentiel.
      */
     public void ajouterTache() {
+        int id = mainView.getIdTache(); // Récupère l'ID de la tâche
         String titre = mainView.getTitreTache(); // Demande à la vue d'obtenir le titre
         String description = mainView.getDescriptionTache(); // Demande à la vue d'obtenir la description
+        LocalDate echeance = mainView.getEcheance(); // Demande la date d'échéance
+        boolean statut = mainView.getStatut(); // Demande le statut
 
-        Tache tache = new Tache(titre, description);
-        tacheRepository.ajouterTache(tache); // Ajoute la tâche au modèle
+        Tache tache = new Tache(id, titre, description, echeance, statut);
+        tacheRepository.add(tache); // Ajoute la tâche au modèle
         mainView.afficherMessage("Tâche ajoutée !"); // Notifie l'utilisateur via la vue
     }
 
     /**
-     * Supprime une tâche existante en fonction de son index.
+     * Supprime une tâche existante en fonction de son ID.
      */
     public void supprimerTache() {
-        int index = mainView.getIndexTache(); // Demande à la vue de récupérer l'index
+        int id = mainView.getIdTache(); // Récupère l'ID de la tâche
 
-        if (index >= 0 && index < tacheRepository.getToutesLesTaches().size()) {
-            tacheRepository.supprimerTache(tacheRepository.getToutesLesTaches().get(index)); // Supprime la tâche
+        Optional<Tache> tache = tacheRepository.getById(id);
+        if (tache.isPresent()) {
+            tacheRepository.remove(tache.get());
             mainView.afficherMessage("Tâche supprimée !"); // Notifie l'utilisateur via la vue
         } else {
-            mainView.afficherMessage("Index invalide."); // Notifie l'utilisateur en cas d'erreur
+            mainView.afficherMessage("Tâche non trouvée."); // Notifie l'utilisateur en cas d'erreur
         }
     }
 
+    /**
+     * Modifie une tâche existante en fonction de son ID.
+     */
     public void modifierTache() {
         try {
             // Récupération des données de la vue
-            int index = mainView.getIndexTache(); // Récupère l'index
+            int id = mainView.getIdTache(); // Récupère l'ID
             String nouveauTitre = mainView.getTitreTache(); // Récupère le nouveau titre
             String nouvelleDescription = mainView.getDescriptionTache(); // Récupère la nouvelle description
             LocalDate nouvelleDateEcheance = mainView.getEcheance(); // Récupère la nouvelle date d'échéance
             boolean nouveauStatut = mainView.getStatut(); // Récupère le statut choisi par l'utilisateur
 
-            // Modification dans le modèle
-            tacheRepository.modifierTache(index, nouveauTitre, nouvelleDescription, nouvelleDateEcheance,
-                    nouveauStatut);
-
-            mainView.afficherMessage("Tâche modifiée avec succès !");
+            // Recherche de la tâche existante
+            Optional<Tache> tache = tacheRepository.getById(id);
+            if (tache.isPresent()) {
+                Tache updatedTache = new Tache(id, nouveauTitre, nouvelleDescription, nouvelleDateEcheance, nouveauStatut);
+                tacheRepository.update(id, updatedTache);
+                mainView.afficherMessage("Tâche modifiée avec succès !");
+            } else {
+                mainView.afficherMessage("Tâche non trouvée.");
+            }
         } catch (IllegalArgumentException e) {
             mainView.afficherMessage("Erreur : " + e.getMessage());
         }
     }
-
-
 }

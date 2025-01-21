@@ -1,8 +1,8 @@
 package interfaces;
 
 import java.util.List;
-import models.Tache;
+import models.AbstractEntity;
 
 public interface Observateur {
-    void update(List<Tache> taches);
+    void update(List<? extends AbstractEntity> entities);
 }

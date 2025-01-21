@@ -2,7 +2,9 @@ package views;
 
 import models.Tache;
 import interfaces.Observateur;
+import models.AbstractEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Vue pour afficher la liste des tâches.
@@ -16,8 +18,12 @@ public class ListeTachesView extends AbstractView implements Observateur {
     }
 
     @Override
-    public void update(List<Tache> nouvellesTaches) {
-        this.taches = nouvellesTaches; // Met à jour la liste interne
+    public void update(List<? extends AbstractEntity> nouvellesEntites) {
+        // Filtrer les entités pour ne garder que les Tache
+        this.taches = nouvellesEntites.stream()
+                                      .filter(entity -> entity instanceof Tache)
+                                      .map(entity -> (Tache) entity)
+                                      .collect(Collectors.toList());
         display(); // Affiche la liste mise à jour
     }
 

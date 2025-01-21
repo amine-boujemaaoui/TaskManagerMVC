@@ -24,9 +24,9 @@ public abstract class AbstractModel implements Sujet {
     }
 
     @Override
-    public void notifyObservers(List<Tache> taches) {
+    public void notifyObservers(List<? extends AbstractEntity> entities) {
         for (Observateur observer : observers) {
-            observer.update(taches);
+            observer.update(entities);
         }
     }
 }

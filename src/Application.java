@@ -18,9 +18,9 @@ public class Application {
 
         Scanner scanner = new Scanner(System.in); // Scanner partagé
 
-        TacheRepository tacheRepository = new TacheRepository("save.json");
+        TacheRepository tacheRepository = new TacheRepository(); // Supprime le besoin de "save.json"
 
-        ListeTachesView listeTachesView = new ListeTachesView(tacheRepository.getToutesLesTaches());
+        ListeTachesView listeTachesView = new ListeTachesView(tacheRepository.getAll());
         MainView mainView = new MainView(listeTachesView, new CommandPanelView(scanner));
 
         tacheRepository.addObserver(listeTachesView);

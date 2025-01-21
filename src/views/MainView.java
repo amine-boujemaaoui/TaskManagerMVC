@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * Vue principale qui combine plusieurs sous-vues pour gérer l'affichage global.
  */
-public class MainView extends AbstractView {
+public class MainView {
 
     private final ListeTachesView listeTachesView;
     private final CommandPanelView commandPanelView;
@@ -29,7 +29,6 @@ public class MainView extends AbstractView {
     /**
      * Affiche les sous-vues dans un ordre défini.
      */
-    @Override
     public void display() {
         clearConsole();
         commandPanelView.display();
@@ -73,21 +72,12 @@ public class MainView extends AbstractView {
     }
 
     /**
-     * Affiche un message à l'utilisateur.
+     * Demande à l'utilisateur d'entrer l'ID de la tâche.
      *
-     * @param message le message à afficher.
+     * @return l'ID de la tâche saisi par l'utilisateur.
      */
-    public void afficherMessage(String message) {
-        System.out.println(message);
-    }
-
-    /**
-     * Demande à l'utilisateur d'entrer l'index de la tâche à supprimer.
-     *
-     * @return l'index de la tâche saisi par l'utilisateur.
-     */
-    public int getIndexTache() {
-        System.out.print("Entrez l'index de la tâche à supprimer : ");
+    public int getIdTache() {
+        System.out.print("Entrez l'ID de la tâche : ");
         try {
             return Integer.parseInt(scanner.nextLine()); // Utilise le scanner partagé
         } catch (NumberFormatException e) {
@@ -96,6 +86,11 @@ public class MainView extends AbstractView {
         }
     }
 
+    /**
+     * Demande à l'utilisateur d'entrer la date d'échéance.
+     *
+     * @return la date d'échéance ou null si aucune date n'est spécifiée.
+     */
     public LocalDate getEcheance() {
         System.out.print("Entrez la date d'échéance (format: AAAA-MM-JJ) ou laissez vide pour aucune : ");
         String input = scanner.nextLine();
@@ -112,6 +107,11 @@ public class MainView extends AbstractView {
         }
     }
 
+    /**
+     * Demande à l'utilisateur de spécifier le statut de la tâche.
+     *
+     * @return true si la tâche est marquée comme terminée, sinon false.
+     */
     public boolean getStatut() {
         System.out.print("Marquer la tâche comme terminée ? (oui/non) : ");
         String input = scanner.nextLine().trim().toLowerCase();
@@ -123,8 +123,16 @@ public class MainView extends AbstractView {
      *
      * @return une chaîne représentant l'entrée utilisateur.
      */
-    @Override
     public String getInput() {
         return commandPanelView.getInput();
+    }
+
+    /**
+     * Affiche un message à l'utilisateur.
+     *
+     * @param message le message à afficher.
+     */
+    public void afficherMessage(String message) {
+        System.out.println(message);
     }
 }
