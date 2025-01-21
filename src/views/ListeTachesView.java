@@ -1,13 +1,13 @@
 package views;
 
 import models.Tache;
-import models.ModelObserver;
+import interfaces.Observateur;
 import java.util.List;
 
 /**
  * Vue pour afficher la liste des tâches.
  */
-public class ListeTachesView extends AbstractView implements ModelObserver {
+public class ListeTachesView extends AbstractView implements Observateur {
 
     private List<Tache> taches;
 

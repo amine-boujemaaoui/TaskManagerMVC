@@ -1,31 +1,31 @@
 package models;
 
+import interfaces.Sujet;
+import interfaces.Observateur;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe abstraite définissant la base pour tous les modèles de l'application.
- * Permet aux modèles d'informer les observateurs (comme les vues) des
- * changements.
- */
-public abstract class AbstractModel {
+public abstract class AbstractModel implements Sujet {
 
-    private final List<ModelObserver> observers;
+    private final List<Observateur> observers;
 
     public AbstractModel() {
         this.observers = new ArrayList<>();
     }
 
-    public void addObserver(ModelObserver observer) {
+    @Override
+    public void addObserver(Observateur observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(ModelObserver observer) {
+    @Override
+    public void removeObserver(Observateur observer) {
         observers.remove(observer);
     }
 
-    protected void notifyObservers(List<Tache> taches) {
-        for (ModelObserver observer : observers) {
+    @Override
+    public void notifyObservers(List<Tache> taches) {
+        for (Observateur observer : observers) {
             observer.update(taches);
         }
     }
