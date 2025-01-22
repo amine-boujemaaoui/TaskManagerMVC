@@ -1,22 +1,22 @@
 package controllers;
 
-/**
- * Classe abstraite définissant les méthodes de base pour tous les contrôleurs.
- * Les contrôleurs gèrent les interactions entre les modèles et les vues.
- */
-public abstract class AbstractController {
+import models.AbstractEntity;
+import views.AbstractView;
+import models.AbstractModelRepository;
 
-    /**
-     * Gère une requête spécifique basée sur l'action demandée.
-     *
-     * @param action une chaîne représentant l'action utilisateur.
-     *               Exemples : "ajouter", "supprimer", etc.
-     */
-    public abstract void handleRequest(String action);
+public abstract class AbstractController<T extends AbstractEntity> {
+    
+    protected AbstractView view;
+    protected AbstractModelRepository<T> repository;
 
-    /**
-     * Met à jour la vue associée au contrôleur.
-     * Cette méthode permet de refléter les changements apportés au modèle.
-     */
-    public abstract void updateView();
+    public AbstractController(AbstractView view, AbstractModelRepository<T> repository) {
+        this.view = view;
+        this.repository = repository;
+    }
+
+    public AbstractModelRepository<T> getRepository() {
+        return repository;
+    }
+
+    public abstract void executer();
 }

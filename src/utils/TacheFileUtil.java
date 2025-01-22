@@ -1,76 +1,36 @@
 package utils;
 
-import java.io.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import models.Tache;
 
-public class TacheFileUtil {
+import java.time.LocalDate;
 
-    private final String cheminFichier;
+public class TacheFileUtil extends AbstractFileUtil<Tache> {
 
     public TacheFileUtil(String cheminFichier) {
-        this.cheminFichier = cheminFichier;
+        super(cheminFichier);
     }
 
-    public void sauvegarder(List<Tache> taches) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(cheminFichier))) {
-            StringBuilder jsonBuilder = new StringBuilder("[\n");
-            for (int i = 0; i < taches.size(); i++) {
-                Tache tache = taches.get(i);
-                jsonBuilder.append("  {")
-                        .append("\n    \"titre\": \"").append(tache.getTitre()).append("\",")
-                        .append("\n    \"description\": \"").append(tache.getDescription()).append("\",")
-                        .append("\n    \"echeance\": \"").append(tache.getEcheance()).append("\",")
-                        .append("\n    \"statut\": ").append(tache.isStatut())
-                        .append("\n  }");
-                if (i < taches.size() - 1) {
-                    jsonBuilder.append(",");
-                }
-                jsonBuilder.append("\n");
-            }
-            jsonBuilder.append("]");
-            writer.write(jsonBuilder.toString());
-        }
+    @Override
+    protected String convertirEnJson(Tache tache) {
+        return "  {" +
+                "\n    \"id\": " + tache.getId() + "," +
+                "\n    \"titre\": \"" + tache.getTitre() + "\"," +
+                "\n    \"description\": \"" + tache.getDescription() + "\"," +
+                "\n    \"echeance\": \"" + (tache.getEcheance() != null ? tache.getEcheance() : "null") + "\"," +
+                "\n    \"statut\": " + tache.isStatut() +
+                "\n  }";
     }
 
-    public List<Tache> charger() throws IOException {
-        List<Tache> taches = new ArrayList<>();
-        File fichier = new File(cheminFichier);
+    @Override
+    protected Tache creerDepuisJson(String json) {
+        String[] champs = json.replaceAll("[\\{\\}\\n ]", "").split(",");
+        int id = Integer.parseInt(champs[0].split(":")[1]);
+        String titre = champs[1].split(":")[1].replaceAll("\"", "");
+        String description = champs[2].split(":")[1].replaceAll("\"", "");
+        String echeanceStr = champs[3].split(":")[1].replaceAll("\"", "");
+        LocalDate echeance = "null".equals(echeanceStr) ? null : LocalDate.parse(echeanceStr);
+        boolean statut = Boolean.parseBoolean(champs[4].split(":")[1]);
 
-        if (!fichier.exists()) {
-            return taches;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
-            StringBuilder jsonBuilder = new StringBuilder();
-            String ligne;
-            while ((ligne = reader.readLine()) != null) {
-                jsonBuilder.append(ligne.trim());
-            }
-
-            String json = jsonBuilder.toString();
-            if (json.isEmpty() || json.equals("[]")) {
-                return taches;
-            }
-
-            json = json.substring(1, json.length() - 1);
-            String[] elements = json.split("\\},\\{");
-
-            for (String element : elements) {
-                element = element.replaceAll("[\\{\\}\\n ]", "");
-                String[] champs = element.split(",");
-                String titre = champs[0].split(":")[1].replaceAll("\"", "");
-                String description = champs[1].split(":")[1].replaceAll("\"", "");
-                String echeanceStr = champs[2].split(":")[1].replaceAll("\"", "");
-                LocalDate echeance = "null".equals(echeanceStr) ? null : LocalDate.parse(echeanceStr);
-                boolean statut = Boolean.parseBoolean(champs[3].split(":")[1]);
-
-                taches.add(new Tache(titre, description, echeance, statut));
-            }
-        }
-
-        return taches;
+        return new Tache(id, titre, description, echeance, statut);
     }
 }

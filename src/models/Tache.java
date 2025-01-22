@@ -3,7 +3,6 @@ package models;
 import java.time.LocalDate;
 
 public class Tache extends AbstractEntity {
-
     private String titre;
     private String description;
     private LocalDate echeance;
@@ -47,16 +46,5 @@ public class Tache extends AbstractEntity {
 
     public void setStatut(boolean statut) {
         this.statut = statut;
-    }
-
-    @Override
-    public String toString() {
-        return "Tache{" +
-                "id=" + getId() +
-                ", titre='" + titre + '\'' +
-                ", description='" + description + '\'' +
-                ", echeance=" + (echeance != null ? echeance : "Non définie") +
-                ", statut=" + (statut ? "Terminée" : "Non terminée") +
-                '}';
     }
 }

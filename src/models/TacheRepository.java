@@ -1,13 +1,5 @@
 package models;
 
-import java.util.ArrayList;
-
-public class TacheRepository extends AbstractRepository<Tache> {
-    public TacheRepository() {
-        super();
-    }
-
-    public void notifyObservers() {
-        super.notifyObservers(new ArrayList<>(entities));
-    }
+public class TacheRepository extends AbstractModelRepository<Tache> {
+    // Spécifique pour les tâches, méthodes supplémentaires si nécessaire
 }

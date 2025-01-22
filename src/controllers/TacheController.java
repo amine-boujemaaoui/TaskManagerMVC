@@ -1,130 +1,67 @@
 package controllers;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
 import models.Tache;
 import models.TacheRepository;
-import views.MainView;
+import views.TacheView;
 
-/**
- * Contrôleur pour gérer les interactions entre le modèle TacheRepository
- * et les vues liées aux tâches.
- */
-public class TacheController {
+import java.util.Optional;
 
-    private final TacheRepository tacheRepository;
-    private final MainView mainView;
+public class TacheController extends AbstractController<Tache> {
+    
+    private final TacheView tacheView;
 
-    /**
-     * Constructeur pour initialiser le contrôleur avec le modèle et la vue.
-     *
-     * @param tacheRepository le référentiel de tâches utilisé par le contrôleur.
-     * @param mainView        la vue principale associée à ce contrôleur.
-     */
-    public TacheController(TacheRepository tacheRepository, MainView mainView) {
-        this.tacheRepository = tacheRepository;
-        this.mainView = mainView;
+    public TacheController(TacheRepository repository, TacheView tacheView) {
+        super(tacheView, repository);
+        this.tacheView = tacheView;
     }
 
-    /**
-     * Démarre la boucle principale pour gérer les interactions utilisateur.
-     */
-    public void start() {
+    @Override
+    public void executer() {
         boolean running = true;
+
         while (running) {
-            updateView(); // Affiche la vue principale
-            String input = getUserInput(); // Capture l'entrée utilisateur
+            String choix = tacheView.afficherMenuEtLireChoix();
 
-            switch (input) {
-                case "1":
-                    ajouterTache();
-                    break;
-                case "2":
-                    supprimerTache();
-                    break;
-                case "3":
-                    modifierTache(); // Nouvelle commande
-                    break;
-                case "4":
-                    running = false;
-                    System.out.println("Au revoir !");
-                    break;
-                default:
-                    System.out.println("Commande non reconnue. Essayez encore.");
+            switch (choix) {
+                case "1" -> ajouterTache();
+                case "2" -> modifierTache();
+                case "3" -> supprimerTache();
+                case "4" -> afficherTaches();
+                case "0" -> running = false;
+                default -> tacheView.afficherMessage("Option invalide. Veuillez réessayer.");
             }
         }
     }
 
-    /**
-     * Met à jour la vue principale en affichant l'état actuel des tâches.
-     */
-    public void updateView() {
-        mainView.display();
+    private void ajouterTache() {
+        int id = repository.getToutesLesEntites().size() + 1;
+        Tache nouvelleTache = tacheView.saisirTache(id);
+        repository.ajouterEntite(nouvelleTache);
+        tacheView.afficherMessage("Tâche ajoutée avec succès !");
     }
 
-    /**
-     * Capture l'entrée utilisateur via la vue principale.
-     *
-     * @return l'entrée utilisateur sous forme de chaîne.
-     */
-    public String getUserInput() {
-        return mainView.getInput();
+    private void modifierTache() {
+        int id = tacheView.demanderIdTache("modifier");
+        Optional<Tache> tacheOpt = repository.getEntiteParId(id);
+
+        tacheOpt.ifPresentOrElse(tache -> {
+            Tache tacheModifiee = tacheView.modifierTache(tache);
+            repository.modifierEntite(tacheModifiee);
+            tacheView.afficherMessage("Tâche modifiée avec succès !");
+        }, () -> tacheView.afficherMessage("Tâche introuvable."));
     }
 
-    /**
-     * Ajoute une nouvelle tâche au référentiel.
-     */
-    public void ajouterTache() {
-        int id = mainView.getIdTache(); // Récupère l'ID de la tâche
-        String titre = mainView.getTitreTache(); // Demande à la vue d'obtenir le titre
-        String description = mainView.getDescriptionTache(); // Demande à la vue d'obtenir la description
-        LocalDate echeance = mainView.getEcheance(); // Demande la date d'échéance
-        boolean statut = mainView.getStatut(); // Demande le statut
-
-        Tache tache = new Tache(id, titre, description, echeance, statut);
-        tacheRepository.add(tache); // Ajoute la tâche au modèle
-        mainView.afficherMessage("Tâche ajoutée !"); // Notifie l'utilisateur via la vue
-    }
-
-    /**
-     * Supprime une tâche existante en fonction de son ID.
-     */
-    public void supprimerTache() {
-        int id = mainView.getIdTache(); // Récupère l'ID de la tâche
-
-        Optional<Tache> tache = tacheRepository.getById(id);
-        if (tache.isPresent()) {
-            tacheRepository.remove(tache.get());
-            mainView.afficherMessage("Tâche supprimée !"); // Notifie l'utilisateur via la vue
+    private void supprimerTache() {
+        int id = tacheView.demanderIdTache("supprimer");
+        if (repository.getEntiteParId(id).isPresent()) {
+            repository.supprimerEntite(id);
+            tacheView.afficherMessage("Tâche supprimée avec succès !");
         } else {
-            mainView.afficherMessage("Tâche non trouvée."); // Notifie l'utilisateur en cas d'erreur
+            tacheView.afficherMessage("Tâche introuvable.");
         }
     }
 
-    /**
-     * Modifie une tâche existante en fonction de son ID.
-     */
-    public void modifierTache() {
-        try {
-            // Récupération des données de la vue
-            int id = mainView.getIdTache(); // Récupère l'ID
-            String nouveauTitre = mainView.getTitreTache(); // Récupère le nouveau titre
-            String nouvelleDescription = mainView.getDescriptionTache(); // Récupère la nouvelle description
-            LocalDate nouvelleDateEcheance = mainView.getEcheance(); // Récupère la nouvelle date d'échéance
-            boolean nouveauStatut = mainView.getStatut(); // Récupère le statut choisi par l'utilisateur
-
-            // Recherche de la tâche existante
-            Optional<Tache> tache = tacheRepository.getById(id);
-            if (tache.isPresent()) {
-                Tache updatedTache = new Tache(id, nouveauTitre, nouvelleDescription, nouvelleDateEcheance, nouveauStatut);
-                tacheRepository.update(id, updatedTache);
-                mainView.afficherMessage("Tâche modifiée avec succès !");
-            } else {
-                mainView.afficherMessage("Tâche non trouvée.");
-            }
-        } catch (IllegalArgumentException e) {
-            mainView.afficherMessage("Erreur : " + e.getMessage());
-        }
+    private void afficherTaches() {
+        tacheView.afficherTaches(repository.getToutesLesEntites());
     }
 }

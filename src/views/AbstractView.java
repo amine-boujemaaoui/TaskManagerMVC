@@ -1,25 +1,28 @@
 package views;
 
-/**
- * Classe abstraite définissant la base pour toutes les vues de l'application.
- * Fournit des méthodes générales pour afficher les informations et capturer
- * les interactions utilisateur.
- */
+import java.util.Scanner;
+
 public abstract class AbstractView {
+    protected final Scanner scanner = new Scanner(System.in);
 
     /**
-     * Méthode pour afficher les informations à l'utilisateur.
-     * Chaque vue concrète doit implémenter cette méthode pour gérer son affichage.
+     * Affiche un message à l'utilisateur et capture sa réponse.
+     * 
+     * @param message Le message à afficher.
+     * @return La réponse saisie par l'utilisateur.
      */
-    public abstract void display();
+    public String afficherEtLire(String message) {
+        System.out.println(message);
+        System.out.print("> ");
+        return scanner.nextLine();
+    }
 
     /**
-     * Méthode pour capturer les entrées utilisateur.
-     * Cette méthode peut être laissée vide pour les vues qui n'ont pas besoin d'interaction.
-     *
-     * @return une chaîne représentant l'entrée utilisateur, ou {@code null} si non utilisée.
+     * Affiche un message simple.
+     * 
+     * @param message Le message à afficher.
      */
-    public String getInput() {
-        return null; // Par défaut, aucune entrée utilisateur
+    public void afficherMessage(String message) {
+        System.out.println(message);
     }
 }

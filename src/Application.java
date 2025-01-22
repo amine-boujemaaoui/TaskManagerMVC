@@ -1,11 +1,10 @@
-import java.util.Scanner;
-
 import controllers.TacheController;
 import models.TacheRepository;
+import models.Tache;
 import utils.TacheFileUtil;
-import views.CommandPanelView;
-import views.ListeTachesView;
-import views.MainView;
+import views.TacheView;
+
+import java.util.List;
 
 /**
  * Classe principale pour gérer le cycle de vie de l'application.
@@ -13,37 +12,29 @@ import views.MainView;
  */
 public class Application {
 
-    private final TacheController tacheController;
+    /**
+     * Démarre l'application.
+     */
+    public void run() {
 
-    public Application() {
-
-        Scanner scanner = new Scanner(System.in); // Scanner partagé
-
-        // Initier le repository et le file util
-        TacheRepository tacheRepository = new TacheRepository();
         TacheFileUtil tacheFileUtil = new TacheFileUtil("save.json");
 
+        TacheRepository tacheRepository = new TacheRepository();
+        TacheView tacheView = new TacheView();
+        TacheController tacheController = new TacheController(tacheRepository, tacheView);
+
         try {
-            // Charger les tâches depuis le fichier
-            tacheRepository.addAll(tacheFileUtil.charger());
+            List<Tache> taches = tacheFileUtil.charger();
+            tacheRepository.ajouterToutesLesEntites(taches);
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement des tâches : " + e.getMessage());
         }
 
-        ListeTachesView listeTachesView = new ListeTachesView(tacheRepository.getAll());
-        MainView mainView = new MainView(listeTachesView, new CommandPanelView(scanner));
+        tacheController.executer();
 
-        tacheRepository.addObserver(listeTachesView);
-
-        this.tacheController = new TacheController(tacheRepository, mainView, tacheFileUtil);
-    }
-
-    public void run() {
-        tacheController.start();
-
-        // Sauvegarder les tâches avant de quitter l'application
         try {
-            tacheController.sauvegarderTaches();
+            tacheFileUtil.sauvegarder(tacheController.getRepository().getToutesLesEntites());
+            System.out.println("Tâches sauvegardées avec succès !");
         } catch (Exception e) {
             System.err.println("Erreur lors de la sauvegarde des tâches : " + e.getMessage());
         }
