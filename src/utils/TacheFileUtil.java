@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import models.Tache;
 
-public class FichierTacheRepository {
+public class TacheFileUtil {
 
     private final String cheminFichier;
 
-    public FichierTacheRepository(String cheminFichier) {
+    public TacheFileUtil(String cheminFichier) {
         this.cheminFichier = cheminFichier;
     }
 
@@ -39,7 +39,6 @@ public class FichierTacheRepository {
         List<Tache> taches = new ArrayList<>();
         File fichier = new File(cheminFichier);
 
-        // Si le fichier n'existe pas, retourne une liste vide
         if (!fichier.exists()) {
             return taches;
         }
@@ -48,20 +47,19 @@ public class FichierTacheRepository {
             StringBuilder jsonBuilder = new StringBuilder();
             String ligne;
             while ((ligne = reader.readLine()) != null) {
-                jsonBuilder.append(ligne.trim()); // Supprime les espaces inutiles
+                jsonBuilder.append(ligne.trim());
             }
 
             String json = jsonBuilder.toString();
             if (json.isEmpty() || json.equals("[]")) {
-                return taches; // Retourne une liste vide si le fichier est vide
+                return taches;
             }
 
-            // Analyse du JSON formaté
-            json = json.substring(1, json.length() - 1); // Supprime les crochets []
-            String[] elements = json.split("\\},\\{"); // Divise les objets JSON
+            json = json.substring(1, json.length() - 1);
+            String[] elements = json.split("\\},\\{");
 
             for (String element : elements) {
-                element = element.replaceAll("[\\{\\}\\n ]", ""); // Supprime les accolades, sauts de ligne et espaces
+                element = element.replaceAll("[\\{\\}\\n ]", "");
                 String[] champs = element.split(",");
                 String titre = champs[0].split(":")[1].replaceAll("\"", "");
                 String description = champs[1].split(":")[1].replaceAll("\"", "");
@@ -75,5 +73,4 @@ public class FichierTacheRepository {
 
         return taches;
     }
-
 }

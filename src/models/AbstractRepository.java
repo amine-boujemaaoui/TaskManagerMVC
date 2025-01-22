@@ -18,6 +18,11 @@ public abstract class AbstractRepository<T extends AbstractEntity> extends Abstr
         notifyObservers(new ArrayList<>(entities));
     }
 
+    public void addAll(List<T> newEntities) {
+        entities.addAll(newEntities);
+        notifyObservers(new ArrayList<>(entities));
+    }
+
     public void remove(T entity) {
         entities.remove(entity);
         notifyObservers(new ArrayList<>(entities));
