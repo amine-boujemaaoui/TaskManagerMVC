@@ -61,23 +61,34 @@ public class TacheView extends AbstractView {
     }
 
     /**
-     * Affiche la liste des tâches.
+     * Affiche la liste des tâches avec un tableau formaté.
      * 
      * @param taches La liste des tâches à afficher.
      */
     public void afficherTaches(List<Tache> taches) {
+
+        String ligneFormat = "│ %-2s │ %-20s │ %-29s │ %-13s │ %-13s │%n";
+
+        System.out.println("┌───────────────────────────────────────────────────────────────────────────────────────────┐");
+        System.out.printf("│ %-89s │%n", " Liste des tâches à faire (" + taches.size() + ")");
+        System.out.println("├────┬──────────────────────┬───────────────────────────────┬───────────────┬───────────────┤");
+        System.out.printf(ligneFormat, "ID", "Title", "Description", "Due Date", "Status");
+        System.out.println("├────┼──────────────────────┼───────────────────────────────┼───────────────┼───────────────┤");
+
         if (taches.isEmpty()) {
-            afficherMessage("Aucune tâche à afficher.");
+            System.out.printf(ligneFormat, "", "", "", "", "");
         } else {
-            System.out.println("=== LISTE DES TÂCHES ===");
-            for (Tache tache : taches) {
-                afficherMessage("ID: " + tache.getId());
-                afficherMessage("Titre: " + tache.getTitre());
-                afficherMessage("Description: " + tache.getDescription());
-                afficherMessage("Échéance: " + tache.getEcheance());
-                afficherMessage("Statut: " + (tache.isStatut() ? "Terminée" : "En cours"));
-                System.out.println("--------------------------");
+            for (int i = 0; i < taches.size(); i++) {
+                Tache tache = taches.get(i);
+                String id = String.format("%2d", i);
+                String titreTache = tache.getTitre();
+                String descTache = tache.getDescription();
+                String echeance = tache.getEcheance() != null ? tache.getEcheance().toString() : "N/A";
+                String statut = tache.isStatut() ? "Done" : "In Progress";
+                System.out.printf(ligneFormat, id, titreTache, descTache, echeance, statut);
             }
         }
+
+        System.out.println("└────┴──────────────────────┴───────────────────────────────┴───────────────┴───────────────┘");
     }
 }
