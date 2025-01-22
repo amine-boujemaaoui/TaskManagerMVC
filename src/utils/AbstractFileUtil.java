@@ -4,39 +4,50 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe abstraite pour gérer la persistance des entités dans un fichier au
+ * format CSV.
+ * Fournit des méthodes génériques pour sauvegarder et charger les entités.
+ *
+ * @param <T> Le type des entités gérées par cette classe.
+ */
 public abstract class AbstractFileUtil<T> {
+
+    /**
+     * Le chemin du fichier utilisé pour la persistance.
+     */
     private final String cheminFichier;
 
+    /**
+     * Constructeur de la classe {@code AbstractFileUtil}.
+     *
+     * @param cheminFichier Le chemin du fichier où les entités seront sauvegardées
+     *                      ou chargées.
+     */
     public AbstractFileUtil(String cheminFichier) {
         this.cheminFichier = cheminFichier;
     }
 
     /**
-     * Sauvegarde la liste des entités dans le fichier.
+     * Sauvegarde la liste des entités dans le fichier au format CSV.
      *
      * @param entities Liste des entités à sauvegarder.
-     * @throws IOException En cas d'erreur d'entrée/sortie.
+     * @throws IOException En cas d'erreur lors de l'écriture dans le fichier.
      */
     public void sauvegarder(List<T> entities) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(cheminFichier))) {
-            StringBuilder jsonBuilder = new StringBuilder("[\n");
-            for (int i = 0; i < entities.size(); i++) {
-                jsonBuilder.append(convertirEnJson(entities.get(i)));
-                if (i < entities.size() - 1) {
-                    jsonBuilder.append(",");
-                }
-                jsonBuilder.append("\n");
+            for (T entity : entities) {
+                writer.write(convertirEnCsv(entity));
+                writer.newLine();
             }
-            jsonBuilder.append("]");
-            writer.write(jsonBuilder.toString());
         }
     }
 
     /**
-     * Charge les entités depuis le fichier.
+     * Charge les entités depuis le fichier CSV.
      *
-     * @return Liste des entités chargées.
-     * @throws IOException En cas d'erreur d'entrée/sortie.
+     * @return Liste des entités chargées depuis le fichier.
+     * @throws IOException En cas d'erreur lors de la lecture du fichier.
      */
     public List<T> charger() throws IOException {
         List<T> entities = new ArrayList<>();
@@ -47,23 +58,10 @@ public abstract class AbstractFileUtil<T> {
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
-            StringBuilder jsonBuilder = new StringBuilder();
             String ligne;
+            reader.readLine(); // Lecture de l'en-tête (si présent)
             while ((ligne = reader.readLine()) != null) {
-                jsonBuilder.append(ligne.trim());
-            }
-
-            String json = jsonBuilder.toString();
-            if (json.isEmpty() || json.equals("[]")) {
-                return entities;
-            }
-
-            json = json.substring(1, json.length() - 1); // Retirer les crochets []
-            String[] elements = json.split("},\\{");
-
-            for (String element : elements) {
-                element = "{" + element.replaceAll("[\\[\\]]", "") + "}"; // Reformater en JSON valide
-                entities.add(creerDepuisJson(element));
+                entities.add(creerDepuisCsv(ligne));
             }
         }
 
@@ -71,18 +69,18 @@ public abstract class AbstractFileUtil<T> {
     }
 
     /**
-     * Méthode abstraite pour convertir une entité en JSON.
+     * Méthode abstraite pour convertir une entité en une ligne CSV.
      *
      * @param entity L'entité à convertir.
-     * @return La chaîne JSON de l'entité.
+     * @return La représentation CSV de l'entité.
      */
-    protected abstract String convertirEnJson(T entity);
+    protected abstract String convertirEnCsv(T entity);
 
     /**
-     * Méthode abstraite pour créer une entité à partir d'une chaîne JSON.
+     * Méthode abstraite pour créer une entité à partir d'une ligne CSV.
      *
-     * @param json La chaîne JSON de l'entité.
-     * @return L'entité créée.
+     * @param csvLine La ligne CSV représentant l'entité.
+     * @return L'entité créée à partir de la ligne CSV.
      */
-    protected abstract T creerDepuisJson(String json);
+    protected abstract T creerDepuisCsv(String csvLine);
 }
