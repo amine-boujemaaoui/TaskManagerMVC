@@ -1,9 +1,0 @@
-"id","titre","description","echeance","statut"
-1,"Planifier le sprint","Préparer les objectifs pour le prochain sprint Scrum.","2025-01-31",false
-2,"Rédiger le rapport mensuel","Compiler les données et rédiger un résumé des activités du mois.","2025-02-01",false
-3,"Mettre à jour le serveur","Lorem ipsum odor amet, consectetuer adipiscing elit. Non ultrices habitasse class volutpat aliquam magnis eros. Aliquam laoreet cras duis diam orci massa. Sodales duis sit malesuada hendrerit commodo. Ex id parturient, enim orci phasellus nullam urna? Tempus aptent praesent placerat elementum ex rhoncus rhoncus sociosqu nisi. Feugiat adipiscing praesent accumsan suscipit enim nascetur.","2025-02-05",true
-4,"Réunion avec l'équipe","Organiser une réunion pour discuter de l'état d'avancement du projet.","2025-01-25",false
-5,"Vérification des logs","Analyser les journaux pour identifier des anomalies récurrentes.","2025-01-30",false
-6,"Création d'un prototype","Développer un prototype fonctionnel pour la présentation client.","2025-02-10",false
-7,"Formation interne","Préparer et animer une formation sur les nouvelles technologies.","2025-01-28",true
-8,"Analyse des retours utilisateurs","Étudier les retours clients pour prioriser les améliorations.","2025-01-27",false

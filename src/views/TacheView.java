@@ -30,7 +30,7 @@ public class TacheView extends AbstractView {
 
         afficherMenu("Commandes disponibles", options);
 
-        return afficherEtLire("TaskManagerMVC");
+        return afficherEtLire("TacheManager");
     }
 
     /**
