@@ -12,6 +12,7 @@ public class MainView extends AbstractView {
         String[] options = {
                 "1. Gérer les tâches",
                 "2. Gérer les missions",
+                "3. Gérer les projets",
                 "0. Quitter"
         };
         afficherMenu("Menu principal", options);

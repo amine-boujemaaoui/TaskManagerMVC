@@ -22,9 +22,22 @@ public abstract class AbstractView {
      * @param message Le message à afficher.
      * @return La réponse saisie par l'utilisateur.
      */
-    public String afficherEtLire(String message) {
-        System.out.print(message + " > ");
+    public String afficherEtLire(String message, boolean command) {
+        if (command)
+            System.out.print(message + " > ");
+        else
+            System.out.print(message);
         return scanner.nextLine();
+    }
+
+    /**
+     * Affiche un message à l'utilisateur et capture sa réponse.
+     *
+     * @param message Le message à afficher.
+     * @return La réponse saisie par l'utilisateur.
+     */
+    public String afficherEtLire(String message) {
+        return afficherEtLire(message, true);
     }
 
     /**
@@ -43,13 +56,13 @@ public abstract class AbstractView {
      * @param options Les options du menu à afficher.
      */
     public void afficherMenu(String titre, String[] options) {
-        int largeur = 35; // Largeur totale du tableau
+        int largeur = 41; // Largeur totale du tableau
         System.out.println("┌" + "─".repeat(largeur - 2) + "┐");
-        System.out.printf("│ %-31s │%n", titre);
+        System.out.printf("│ %-37s │%n", titre);
         System.out.println("├" + "─".repeat(largeur - 2) + "┤");
 
         for (String option : options) {
-            System.out.printf("│ %-31s │%n", option);
+            System.out.printf("│ %-37s │%n", option);
         }
 
         System.out.println("└" + "─".repeat(largeur - 2) + "┘");

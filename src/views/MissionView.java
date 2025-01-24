@@ -39,10 +39,10 @@ public class MissionView extends AbstractView {
      * @return Une nouvelle instance de {@link Mission}.
      */
     public Mission saisirMission(int id) {
-        String titre = afficherEtLire("Titre:");
-        LocalDate dateDebut = LocalDate.parse(afficherEtLire("Date de début (AAAA-MM-JJ):"));
-        LocalDate dateFin = LocalDate.parse(afficherEtLire("Date de fin (AAAA-MM-JJ):"));
-        String nomsInput = afficherEtLire("Noms associés (séparés par des points-virgules):");
+        String titre = afficherEtLire(" - Titre\nMissionManager");
+        LocalDate dateDebut = LocalDate.parse(afficherEtLire(" - Date de début (AAAA-MM-JJ)\nMissionManager"));
+        LocalDate dateFin = LocalDate.parse(afficherEtLire(" - Date de fin (AAAA-MM-JJ)\nMissionManager"));
+        String nomsInput = afficherEtLire(" - Noms associés (séparés par des points-virgules)\nMissionManager");
         List<String> noms = List.of(nomsInput.split(";"));
 
         return new Mission(id, titre, dateDebut, dateFin, noms);
@@ -88,7 +88,7 @@ public class MissionView extends AbstractView {
         }
 
         System.out.println("└────┴──────────────────────┴────────────┴────────────┴───────────────────────────────┘");
-        afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
+        afficherEtLire("Appuyez sur Entrée pour revenir au menu...", false);
     }
 
     /**
@@ -133,7 +133,7 @@ public class MissionView extends AbstractView {
         }
 
         System.out.println("└─────────────────────────────────────────┘");
-        afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
+        afficherEtLire("Appuyez sur Entrée pour revenir au menu...", false);
     }
 
     /**

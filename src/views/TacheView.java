@@ -117,7 +117,7 @@ public class TacheView extends AbstractView {
         }
 
         System.out.println("└────┴──────────────────────┴───────────────────────────────┴────────────┴───────────────┘");
-        afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
+        afficherEtLire("Appuyez sur Entrée pour revenir au menu...", false);
     }
 
     /**
@@ -160,7 +160,7 @@ public class TacheView extends AbstractView {
         }
 
         System.out.println("└─────────────────────────────────────────┘");
-        afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
+        afficherEtLire("Appuyez sur Entrée pour revenir au menu...", false);
     }
 
     /**

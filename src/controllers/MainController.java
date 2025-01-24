@@ -2,16 +2,28 @@ package controllers;
 
 import views.MainView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainController {
 
     private final MainView mainView;
-    private final TacheController tacheController;
-    private final MissionController missionController; // À créer pour Mission
+    private final Map<String, AbstractController<?>> controllers;
 
-    public MainController(TacheController tacheController, MissionController missionController) {
+    public MainController() {
         this.mainView = new MainView();
-        this.tacheController = tacheController;
-        this.missionController = missionController;
+        this.controllers = new HashMap<>();
+    }
+
+    /**
+     * Enregistre un contrôleur avec un identifiant unique.
+     *
+     * @param key        L'identifiant du contrôleur (par exemple, "1" pour les
+     *                   tâches).
+     * @param controller Le contrôleur à enregistrer.
+     */
+    public void enregistrerController(String key, AbstractController<?> controller) {
+        controllers.put(key, controller);
     }
 
     /**
@@ -23,14 +35,16 @@ public class MainController {
         while (running) {
             String choix = mainView.afficherMenuPrincipal();
 
-            switch (choix) {
-                case "1" -> tacheController.executer(); // Gérer les tâches
-                case "2" -> missionController.executer(); // Gérer les missions
-                case "0" -> {
-                    running = false;
-                    mainView.afficherMessage("Au revoir !");
+            if (choix.equals("0")) {
+                running = false;
+                mainView.afficherMessage("Au revoir !");
+            } else {
+                AbstractController<?> controller = controllers.get(choix);
+                if (controller != null) {
+                    controller.executer();
+                } else {
+                    mainView.afficherMessage("Option invalide, veuillez réessayer.");
                 }
-                default -> mainView.afficherMessage("Option invalide, veuillez réessayer.");
             }
         }
     }
