@@ -59,7 +59,6 @@ public abstract class AbstractFileUtil<T> {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
             String ligne;
-            reader.readLine(); // Lecture de l'en-tête (si présent)
             while ((ligne = reader.readLine()) != null) {
                 entities.add(creerDepuisCsv(ligne));
             }
