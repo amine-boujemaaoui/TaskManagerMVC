@@ -1,11 +1,19 @@
-package models;
+package models.Entities;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Classe représentant une mission, avec un titre, une date de début, une date
- * de fin, et une liste de noms.
+ * de fin, et une liste de noms associés.
+ * 
+ * <p>
+ * Cette classe étend {@link AbstractEntity}, lui conférant un identifiant
+ * unique, et ajoute des attributs spécifiques à une mission, tels que le titre,
+ * les dates de début et de fin, ainsi qu'une liste de noms.
+ * </p>
+ * 
+ * @author Le Mouel, Boujemaaoui, Laouaj
  */
 public class Mission extends AbstractEntity {
 
@@ -103,7 +111,7 @@ public class Mission extends AbstractEntity {
     /**
      * Obtient la liste des noms associés à la mission.
      *
-     * @return La liste des noms.
+     * @return La liste des noms associés à la mission.
      */
     public List<String> getNoms() {
         return noms;
@@ -112,16 +120,18 @@ public class Mission extends AbstractEntity {
     /**
      * Définit la liste des noms associés à la mission.
      *
-     * @param noms La nouvelle liste des noms.
+     * @param noms La nouvelle liste des noms associés.
      */
     public void setNoms(List<String> noms) {
         this.noms = noms;
     }
 
     /**
-     * Retourne une représentation textuelle de la mission.
+     * Retourne une représentation textuelle de la mission, incluant son
+     * identifiant, son titre, ses dates de début et de fin, ainsi que la liste des
+     * noms associés.
      *
-     * @return Une chaîne représentant les informations de la mission.
+     * @return Une chaîne représentant les informations détaillées de la mission.
      */
     @Override
     public String toString() {

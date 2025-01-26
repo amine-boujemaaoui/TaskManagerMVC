@@ -1,9 +1,9 @@
 package views;
 
-import models.Mission;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import models.Entities.Mission;
 
 /**
  * Classe responsable de l'affichage et des interactions utilisateur pour les
@@ -11,6 +11,15 @@ import java.util.List;
  */
 public class MissionView extends AbstractView<Mission> {
 
+    /**
+     * Ajoute une nouvelle mission en capturant les données nécessaires auprès de
+     * l'utilisateur.
+     * 
+     * @author Le Mouel, Boujemaaoui, Laouaj
+     *
+     * @param id L'identifiant unique de la mission.
+     * @return Une nouvelle instance de {@link Mission}.
+     */
     @Override
     public Mission ajouter(int id) {
         String titre = afficherEtLire("Entrez le titre de la mission :");
@@ -22,6 +31,13 @@ public class MissionView extends AbstractView<Mission> {
         return new Mission(id, titre, dateDebut, dateFin, noms);
     }
 
+    /**
+     * Modifie une mission existante en capturant les données mises à jour auprès de
+     * l'utilisateur.
+     *
+     * @param mission La mission existante à modifier.
+     * @return Une instance de {@link Mission} mise à jour.
+     */
     @Override
     public Mission modifier(Mission mission) {
         String nouveauTitre = afficherEtLire("Entrez le nouveau titre (actuel : " + mission.getTitre() + ") :");
@@ -50,12 +66,21 @@ public class MissionView extends AbstractView<Mission> {
         return new Mission(mission.getId(), nouveauTitre, nouvelleDateDebut, nouvelleDateFin, nouveauxNoms);
     }
 
+    /**
+     * Supprime une mission en affichant un message de confirmation avec
+     * l'identifiant de la mission.
+     */
     @Override
     public void supprimer() {
         int id = demanderId("supprimer");
         afficherMessage("La mission avec l'ID " + id + " sera supprimée.");
     }
 
+    /**
+     * Affiche la liste de toutes les missions dans un format tabulaire.
+     *
+     * @param missions La liste des missions à afficher.
+     */
     @Override
     public void afficherTous(List<Mission> missions) {
         clearConsole();
@@ -85,6 +110,11 @@ public class MissionView extends AbstractView<Mission> {
         afficherEtLire("Appuyez sur Entrée pour continuer...");
     }
 
+    /**
+     * Affiche les détails d'une mission dans un format détaillé.
+     *
+     * @param mission La mission dont les détails doivent être affichés.
+     */
     @Override
     public void afficherDetails(Mission mission) {
         clearConsole();
@@ -111,6 +141,11 @@ public class MissionView extends AbstractView<Mission> {
         afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
     }
 
+    /**
+     * Affiche le menu des missions et capture le choix de l'utilisateur.
+     *
+     * @return Le choix de l'utilisateur sous forme de chaîne.
+     */
     @Override
     public String afficherMenuEtLireChoix() {
         clearConsole();
@@ -127,9 +162,11 @@ public class MissionView extends AbstractView<Mission> {
         return afficherEtLire("Choisissez une option :");
     }
 
+    /**
+     * Méthode appelée pour notifier les observateurs d'une mise à jour.
+     * Ici, elle est laissée vide car elle peut être implémentée selon les besoins.
+     */
     @Override
     public void actualiser() {
     }
-
-
 }

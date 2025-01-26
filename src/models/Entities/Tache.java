@@ -1,31 +1,40 @@
-package models;
+package models.Entities;
 
 import java.time.LocalDate;
 
 /**
- * Classe représentant une tâche avec un titre, une description, une échéance et
- * un statut.
+ * Classe représentant une tâche avec un titre, une description, une date
+ * d'échéance et un statut.
+ * <p>
+ * Une tâche est identifiée de manière unique par un identifiant, hérité de la
+ * classe {@link AbstractEntity}. Elle contient des informations sur son titre,
+ * sa description, sa date d'échéance et son statut (terminée ou en cours).
+ * </p>
+ * 
+ * @author Le Mouel, Boujemaaoui, Laouaj
  */
 public class Tache extends AbstractEntity {
 
     /**
-     * Le titre de la tâche.
+     * Le titre de la tâche, décrivant brièvement son contenu ou objectif.
      */
     private String titre;
 
     /**
-     * La description de la tâche.
+     * Une description détaillée de la tâche, fournissant plus d'informations sur
+     * son contenu.
      */
     private String description;
 
     /**
-     * La date d'échéance de la tâche.
+     * La date limite à laquelle la tâche doit être terminée.
      */
     private LocalDate echeance;
 
     /**
-     * Le statut de la tâche, indiquant si elle est terminée (true) ou en cours
-     * (false).
+     * Le statut de la tâche :
+     * {@code true} si la tâche est terminée,
+     * {@code false} si elle est en cours.
      */
     private boolean statut;
 
@@ -34,9 +43,11 @@ public class Tache extends AbstractEntity {
      *
      * @param id          L'identifiant unique de la tâche.
      * @param titre       Le titre de la tâche.
-     * @param description La description de la tâche.
-     * @param echeance    La date d'échéance de la tâche.
-     * @param statut      Le statut de la tâche (terminée ou non).
+     * @param description Une description détaillée de la tâche.
+     * @param echeance    La date d'échéance à laquelle la tâche doit être
+     *                    terminée.
+     * @param statut      Le statut indiquant si la tâche est terminée
+     *                    ({@code true}) ou en cours ({@code false}).
      */
     public Tache(int id, String titre, String description, LocalDate echeance, boolean statut) {
         super(id);
@@ -56,7 +67,7 @@ public class Tache extends AbstractEntity {
     }
 
     /**
-     * Définit le titre de la tâche.
+     * Définit un nouveau titre pour la tâche.
      *
      * @param titre Le nouveau titre de la tâche.
      */
@@ -74,7 +85,7 @@ public class Tache extends AbstractEntity {
     }
 
     /**
-     * Définit la description de la tâche.
+     * Définit une nouvelle description pour la tâche.
      *
      * @param description La nouvelle description de la tâche.
      */
@@ -85,14 +96,15 @@ public class Tache extends AbstractEntity {
     /**
      * Obtient la date d'échéance de la tâche.
      *
-     * @return La date d'échéance de la tâche.
+     * @return La date d'échéance de la tâche, ou {@code null} si aucune date
+     *         n'est définie.
      */
     public LocalDate getEcheance() {
         return echeance;
     }
 
     /**
-     * Définit la date d'échéance de la tâche.
+     * Définit une nouvelle date d'échéance pour la tâche.
      *
      * @param echeance La nouvelle date d'échéance de la tâche.
      */
@@ -113,7 +125,7 @@ public class Tache extends AbstractEntity {
      * Définit le statut de la tâche.
      *
      * @param statut {@code true} pour indiquer que la tâche est terminée,
-     *               {@code false} sinon.
+     *               {@code false} pour indiquer qu'elle est en cours.
      */
     public void setStatut(boolean statut) {
         this.statut = statut;
@@ -122,7 +134,9 @@ public class Tache extends AbstractEntity {
     /**
      * Retourne une représentation textuelle de la tâche.
      *
-     * @return Une chaîne représentant les informations de la tâche.
+     * @return Une chaîne contenant les informations détaillées de la tâche, y
+     *         compris son identifiant, son titre, sa description, sa date
+     *         d'échéance et son statut.
      */
     @Override
     public String toString() {

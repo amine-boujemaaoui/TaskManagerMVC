@@ -6,27 +6,57 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Classe utilitaire abstraite pour la gestion des fichiers au format CSV.
+ * <p>
+ * Cette classe permet de sauvegarder et de charger des entités de type
+ * générique {@code T}
+ * depuis un fichier CSV. Elle implémente un mécanisme de singleton pour
+ * garantir une
+ * instance unique par type de sous-classe.
+ * 
+ * @author Le Mouel, Boujemaaoui, Laouaj
+ *
+ * @param <T> Le type des entités gérées par cette classe.
+ */
 public abstract class AbstractFileUtil<T> {
 
+    /**
+     * Chemin du fichier utilisé pour stocker les données.
+     */
     private final String cheminFichier;
 
-    // Map pour stocker les instances singleton par type concret
+    /**
+     * Map pour stocker les instances singleton par type concret.
+     */
     private static final Map<Class<?>, AbstractFileUtil<?>> instances = new HashMap<>();
 
+    /**
+     * Constructeur protégé pour initialiser le fichier source.
+     *
+     * @param cheminFichier Le chemin du fichier source.
+     */
     protected AbstractFileUtil(String cheminFichier) {
         this.cheminFichier = cheminFichier;
     }
 
     /**
      * Méthode pour obtenir une instance unique d'une sous-classe spécifique.
+     * <p>
+     * Utilise un constructeur de la sous-classe, avec les arguments spécifiés,
+     * pour créer une instance si elle n'existe pas encore. Cette instance est
+     * ensuite
+     * stockée pour être réutilisée lors des appels suivants.
+     * </p>
      *
-     * @param type          La classe de la sous-classe.
-     * @param cheminFichier Le chemin du fichier.
-     * @param <U>           Le type concret de l'entité.
+     * @param type La classe de la sous-classe à instancier.
+     * @param args Les arguments à passer au constructeur de la sous-classe.
+     * @param <U>  Le type concret des entités gérées.
      * @return L'instance unique de la sous-classe.
+     * @throws RuntimeException Si une erreur survient lors de la création de
+     *                          l'instance.
      */
     public static <U> AbstractFileUtil<U> getInstance(Class<? extends AbstractFileUtil<U>> type, Object... args) {
-        // Vérifie si une instance pour ce type existe déjà
         if (!instances.containsKey(type)) {
             try {
                 // Obtenez les types des arguments passés
@@ -43,16 +73,15 @@ public abstract class AbstractFileUtil<T> {
             }
         }
 
-        // Retourne l'instance unique
         @SuppressWarnings("unchecked")
         AbstractFileUtil<U> instance = (AbstractFileUtil<U>) instances.get(type);
         return instance;
     }
 
     /**
-     * Sauvegarde la liste des entités dans le fichier au format CSV.
+     * Sauvegarde une liste d'entités dans le fichier au format CSV.
      *
-     * @param entities Liste des entités à sauvegarder.
+     * @param entities La liste des entités à sauvegarder.
      * @throws IOException En cas d'erreur lors de l'écriture dans le fichier.
      */
     public void sauvegarder(List<T> entities) throws IOException {
@@ -67,7 +96,7 @@ public abstract class AbstractFileUtil<T> {
     /**
      * Charge les entités depuis le fichier CSV.
      *
-     * @return Liste des entités chargées depuis le fichier.
+     * @return Une liste des entités chargées depuis le fichier.
      * @throws IOException En cas d'erreur lors de la lecture du fichier.
      */
     public List<T> charger() throws IOException {
@@ -92,15 +121,15 @@ public abstract class AbstractFileUtil<T> {
      * Méthode abstraite pour convertir une entité en une ligne CSV.
      *
      * @param entity L'entité à convertir.
-     * @return La représentation CSV de l'entité.
+     * @return La chaîne représentant l'entité au format CSV.
      */
     protected abstract String convertirEnCsv(T entity);
 
     /**
      * Méthode abstraite pour créer une entité à partir d'une ligne CSV.
      *
-     * @param csvLine La ligne CSV représentant l'entité.
-     * @return L'entité créée à partir de la ligne CSV.
+     * @param csvLine La ligne CSV représentant une entité.
+     * @return Une instance de l'entité créée à partir de la ligne CSV.
      */
     protected abstract T creerDepuisCsv(String csvLine);
 }

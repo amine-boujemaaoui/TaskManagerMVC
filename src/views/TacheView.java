@@ -1,16 +1,25 @@
 package views;
 
-import models.Tache;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import models.Entities.Tache;
 
 /**
  * Classe responsable de l'affichage des tâches et des interactions utilisateur
  * pour les opérations liées aux tâches.
+ * 
+ * @author Le Mouel, Boujemaaoui, Laouaj
  */
 public class TacheView extends AbstractView<Tache> {
 
+    /**
+     * Permet à l'utilisateur d'ajouter une nouvelle tâche en saisissant ses
+     * informations.
+     *
+     * @param id L'identifiant unique de la tâche.
+     * @return Une instance de {@link Tache} contenant les informations saisies.
+     */
     @Override
     public Tache ajouter(int id) {
         String titre = afficherEtLire("Entrez le titre de la tâche :");
@@ -19,6 +28,12 @@ public class TacheView extends AbstractView<Tache> {
         return new Tache(id, titre, description, echeance, false);
     }
 
+    /**
+     * Permet à l'utilisateur de modifier les détails d'une tâche existante.
+     *
+     * @param tache La tâche à modifier.
+     * @return Une instance mise à jour de {@link Tache}.
+     */
     @Override
     public Tache modifier(Tache tache) {
         String nouveauTitre = afficherEtLire("Nouveau titre (actuel : " + tache.getTitre() + ") :");
@@ -48,12 +63,21 @@ public class TacheView extends AbstractView<Tache> {
         return new Tache(tache.getId(), nouveauTitre, nouvelleDescription, nouvelleEcheance, nouveauStatut);
     }
 
+    /**
+     * Demande à l'utilisateur l'identifiant d'une tâche à supprimer et affiche un
+     * message de confirmation.
+     */
     @Override
     public void supprimer() {
         int id = demanderId("supprimer");
         afficherMessage("La tâche avec l'ID " + id + " sera supprimée.");
     }
 
+    /**
+     * Affiche la liste de toutes les tâches dans un format tabulaire.
+     *
+     * @param taches La liste des tâches à afficher.
+     */
     @Override
     public void afficherTous(List<Tache> taches) {
         clearConsole();
@@ -86,6 +110,11 @@ public class TacheView extends AbstractView<Tache> {
         afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
     }
 
+    /**
+     * Affiche les détails d'une tâche spécifique dans un format lisible.
+     *
+     * @param tache La tâche dont les détails doivent être affichés.
+     */
     @Override
     public void afficherDetails(Tache tache) {
         clearConsole();
@@ -99,7 +128,6 @@ public class TacheView extends AbstractView<Tache> {
         System.out.printf("│ Statut     │ %-26s │%n", tache.isStatut() ? "Done" : "In Progress");
         System.out.println("├────────────┴────────────────────────────┤");
 
-        // Découper la description en plusieurs lignes si nécessaire
         String description = tache.getDescription();
         List<String> lignesDescription = decouperEnLignes(description, largeurDescription);
         System.out.println("│ Description                             │");
@@ -111,6 +139,11 @@ public class TacheView extends AbstractView<Tache> {
         afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
     }
 
+    /**
+     * Affiche le menu des tâches et lit le choix de l'utilisateur.
+     *
+     * @return Le choix de l'utilisateur sous forme de chaîne.
+     */
     @Override
     public String afficherMenuEtLireChoix() {
         clearConsole();
@@ -127,11 +160,22 @@ public class TacheView extends AbstractView<Tache> {
         return afficherEtLire("Choisissez une option :");
     }
 
+    /**
+     * Demande à l'utilisateur de saisir l'identifiant d'une tâche pour une action
+     * spécifique.
+     *
+     * @param action L'action à effectuer (par ex., "modifier", "supprimer").
+     * @return L'identifiant de la tâche saisi par l'utilisateur.
+     */
     @Override
     public int demanderId(String action) {
         return Integer.parseInt(afficherEtLire("Entrez l'ID de la tâche pour " + action + " :"));
     }
 
+    /**
+     * Méthode appelée pour notifier les observateurs d'une mise à jour.
+     * Elle est vide ici, mais peut être implémentée selon les besoins.
+     */
     @Override
     public void actualiser() {
     }

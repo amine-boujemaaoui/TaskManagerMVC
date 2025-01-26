@@ -1,8 +1,8 @@
 package controllers;
 
-import models.Mission;
-import models.Projet;
-import models.ProjetRepository;
+import models.Entities.Mission;
+import models.Entities.Projet;
+import models.Repositories.ProjetRepository;
 import utils.AbstractFileUtil;
 import utils.ProjetFileUtil;
 import views.ProjetView;
@@ -10,12 +10,24 @@ import views.ProjetView;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Contrôleur pour gérer les opérations sur les projets, y compris l'ajout,
+ * l'affichage, la modification, la suppression et la sauvegarde des projets.
+ * 
+ * @author Le Mouel, Boujemaaoui, Laouaj
+ */
 public class ProjetController extends AbstractController<Projet> {
 
+    /**
+     * Contrôleur pour gérer les missions associées aux projets.
+     */
     private final MissionController missionController;
 
     /**
      * Constructeur du contrôleur pour gérer les projets.
+     * Initialise la vue et le référentiel pour les projets, ainsi que le contrôleur
+     * des missions associées.
+     * Charge les projets depuis un fichier à l'aide de l'utilitaire de fichier.
      *
      * @param view              La vue associée pour afficher et interagir avec les
      *                          projets.
@@ -44,6 +56,9 @@ public class ProjetController extends AbstractController<Projet> {
 
     /**
      * Ajoute un nouveau projet.
+     * Demande à l'utilisateur de sélectionner une mission et de fournir les
+     * informations sur le projet.
+     * Ajoute le projet avec la mission associée au référentiel.
      */
     @Override
     public void ajouter() {
@@ -74,6 +89,8 @@ public class ProjetController extends AbstractController<Projet> {
 
     /**
      * Modifie un projet existant.
+     * Demande à l'utilisateur de sélectionner un projet à modifier, et met à jour
+     * ses informations, y compris la mission associée, si nécessaire.
      */
     @Override
     public void modifier() {
@@ -100,6 +117,8 @@ public class ProjetController extends AbstractController<Projet> {
 
     /**
      * Supprime un projet existant.
+     * Demande à l'utilisateur de sélectionner un projet à supprimer.
+     * Supprime le projet du référentiel si celui-ci existe.
      */
     @Override
     public void supprimer() {
@@ -115,7 +134,8 @@ public class ProjetController extends AbstractController<Projet> {
     }
 
     /**
-     * Affiche tous les projets existants.
+     * Affiche tous les projets existants dans le référentiel.
+     * Trie les projets par leur ID avant de les afficher.
      */
     @Override
     public void afficherTous() {
@@ -126,6 +146,8 @@ public class ProjetController extends AbstractController<Projet> {
 
     /**
      * Affiche les détails d'un projet spécifique.
+     * Demande à l'utilisateur de fournir l'ID d'un projet, puis affiche ses
+     * informations si celui-ci existe.
      */
     @Override
     public void afficherDetails() {
