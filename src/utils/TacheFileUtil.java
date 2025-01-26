@@ -44,13 +44,8 @@ public class TacheFileUtil extends AbstractFileUtil<Tache> {
      */
     @Override
     protected Tache creerDepuisCsv(String csvLine) {
-        // Découpe la ligne en respectant les guillemets CSV
         String[] champs = csvLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-
-        for (String champ : champs) {
-            System.out.println(champ);
-        }
-
+    
         int id = Integer.parseInt(champs[0].replaceAll("^\"|\"$", ""));
         String titre = champs[1].replaceAll("^\"|\"$", "");
         String description = champs[2].replaceAll("^\"|\"$", "");

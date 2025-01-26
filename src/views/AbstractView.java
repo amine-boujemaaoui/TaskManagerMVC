@@ -1,62 +1,37 @@
 package views;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-/**
- * Classe abstraite représentant une vue générique pour interagir avec
- * l'utilisateur.
- * Fournit des méthodes utilitaires pour afficher des messages, des menus et
- * capturer
- * les entrées de l'utilisateur.
- */
-public abstract class AbstractView {
+import interfaces.Observateur;
+import models.AbstractEntity;
 
-    /**
-     * Scanner utilisé pour capturer les entrées utilisateur.
-     */
+public abstract class AbstractView<T extends AbstractEntity> implements Observateur {
+
     protected final Scanner scanner = new Scanner(System.in);
 
-    /**
-     * Affiche un message à l'utilisateur et capture sa réponse.
-     *
-     * @param message Le message à afficher.
-     * @return La réponse saisie par l'utilisateur.
-     */
-    public String afficherEtLire(String message, boolean command) {
-        if (command)
-            System.out.print(message + " > ");
-        else
-            System.out.print(message);
+    public abstract T ajouter(int id);
+
+    public abstract T modifier(T entity);
+
+    public abstract void supprimer();
+
+    public abstract void afficherTous(List<T> entites);
+
+    public abstract void afficherDetails(T entity);
+
+    public String afficherEtLire(String message) {
+        afficherMessage(message);
         return scanner.nextLine();
     }
 
-    /**
-     * Affiche un message à l'utilisateur et capture sa réponse.
-     *
-     * @param message Le message à afficher.
-     * @return La réponse saisie par l'utilisateur.
-     */
-    public String afficherEtLire(String message) {
-        return afficherEtLire(message, true);
-    }
-
-    /**
-     * Affiche un message simple à l'utilisateur.
-     *
-     * @param message Le message à afficher.
-     */
     public void afficherMessage(String message) {
         System.out.println(message);
     }
 
-    /**
-     * Affiche un menu avec des options numérotées sous forme de tableau.
-     *
-     * @param titre   Le titre du menu.
-     * @param options Les options du menu à afficher.
-     */
     public void afficherMenu(String titre, String[] options) {
-        int largeur = 41; // Largeur totale du tableau
+        int largeur = 41;
         System.out.println("┌" + "─".repeat(largeur - 2) + "┐");
         System.out.printf("│ %-37s │%n", titre);
         System.out.println("├" + "─".repeat(largeur - 2) + "┤");
@@ -68,10 +43,19 @@ public abstract class AbstractView {
         System.out.println("└" + "─".repeat(largeur - 2) + "┘");
     }
 
-    /**
-     * Efface la console pour améliorer la lisibilité.
-     * Compatible avec Windows et les systèmes basés sur Unix.
-     */
+    public abstract String afficherMenuEtLireChoix();
+
+    public int demanderId(String action) {
+        return Integer.parseInt(afficherEtLire("Entrez l'ID de l'entité à " + action + " :"));
+    }
+
+    public String tronquer(String texte, int largeur) {
+        if (texte.length() > largeur) {
+            return texte.substring(0, largeur - 3) + "...";
+        }
+        return String.format("%-" + largeur + "s", texte);
+    }
+
     public void clearConsole() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
@@ -83,5 +67,25 @@ public abstract class AbstractView {
         } catch (Exception e) {
             System.out.println("Impossible de nettoyer la console.");
         }
+    }
+
+    /**
+     * Découpe une chaîne en plusieurs lignes de longueur maximale.
+     *
+     * @param texte   La chaîne à découper.
+     * @param largeur La largeur maximale par ligne.
+     * @return Une liste de lignes découpées.
+     */
+    public List<String> decouperEnLignes(String texte, int largeur) {
+        List<String> lignes = new ArrayList<>();
+        int index = 0;
+
+        while (index < texte.length()) {
+            int fin = Math.min(index + largeur, texte.length());
+            lignes.add(texte.substring(index, fin));
+            index = fin;
+        }
+
+        return lignes;
     }
 }

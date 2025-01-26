@@ -60,7 +60,7 @@ public class ProjetFileUtil extends AbstractFileUtil<Projet> {
         Mission mission = null;
         if (!"null".equals(missionIdStr)) {
             int missionId = Integer.parseInt(missionIdStr);
-            mission = missionRepository.getEntiteParId(missionId).orElse(null);
+            mission = missionRepository.getParId(missionId).orElse(null);
         }
 
         return new Projet(id, nom, description, mission, null);

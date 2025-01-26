@@ -2,30 +2,51 @@ package utils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Classe abstraite pour gérer la persistance des entités dans un fichier au
- * format CSV.
- * Fournit des méthodes génériques pour sauvegarder et charger les entités.
- *
- * @param <T> Le type des entités gérées par cette classe.
- */
 public abstract class AbstractFileUtil<T> {
 
-    /**
-     * Le chemin du fichier utilisé pour la persistance.
-     */
     private final String cheminFichier;
 
-    /**
-     * Constructeur de la classe {@code AbstractFileUtil}.
-     *
-     * @param cheminFichier Le chemin du fichier où les entités seront sauvegardées
-     *                      ou chargées.
-     */
-    public AbstractFileUtil(String cheminFichier) {
+    // Map pour stocker les instances singleton par type concret
+    private static final Map<Class<?>, AbstractFileUtil<?>> instances = new HashMap<>();
+
+    protected AbstractFileUtil(String cheminFichier) {
         this.cheminFichier = cheminFichier;
+    }
+
+    /**
+     * Méthode pour obtenir une instance unique d'une sous-classe spécifique.
+     *
+     * @param type          La classe de la sous-classe.
+     * @param cheminFichier Le chemin du fichier.
+     * @param <U>           Le type concret de l'entité.
+     * @return L'instance unique de la sous-classe.
+     */
+    public static <U> AbstractFileUtil<U> getInstance(Class<? extends AbstractFileUtil<U>> type, Object... args) {
+        // Vérifie si une instance pour ce type existe déjà
+        if (!instances.containsKey(type)) {
+            try {
+                // Obtenez les types des arguments passés
+                Class<?>[] argTypes = new Class<?>[args.length];
+                for (int i = 0; i < args.length; i++) {
+                    argTypes[i] = args[i].getClass();
+                }
+
+                // Crée une nouvelle instance en appelant le constructeur correspondant
+                AbstractFileUtil<U> instance = type.getDeclaredConstructor(argTypes).newInstance(args);
+                instances.put(type, instance);
+            } catch (Exception e) {
+                throw new RuntimeException("Erreur lors de la création du singleton pour " + type.getName(), e);
+            }
+        }
+
+        // Retourne l'instance unique
+        @SuppressWarnings("unchecked")
+        AbstractFileUtil<U> instance = (AbstractFileUtil<U>) instances.get(type);
+        return instance;
     }
 
     /**

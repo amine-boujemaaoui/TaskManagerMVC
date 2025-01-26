@@ -4,8 +4,7 @@ package interfaces;
  * Interface représentant un observateur dans le cadre du patron de conception
  * Observer.
  * Les classes qui implémentent cette interface doivent définir la logique à
- * exécuter
- * lorsqu'une mise à jour est reçue.
+ * exécuter lorsqu'une mise à jour est reçue.
  */
 public interface Observateur {
 

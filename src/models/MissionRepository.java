@@ -3,6 +3,9 @@ package models;
 /**
  * Référentiel spécifique pour la gestion des missions.
  */
-public class MissionRepository extends AbstractModelRepository<Mission> {
-    // Ajoutez ici des méthodes spécifiques pour Mission si nécessaire
+public class MissionRepository extends AbstractRepository<Mission> {
+
+    public MissionRepository(String nomFichier) {
+        super(nomFichier);
+    }
 }

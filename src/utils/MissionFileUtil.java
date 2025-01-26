@@ -48,10 +48,8 @@ public class MissionFileUtil extends AbstractFileUtil<Mission> {
      */
     @Override
     protected Mission creerDepuisCsv(String csvLine) {
-        // Découpe la ligne en respectant les guillemets CSV
         String[] champs = csvLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
-        // Nettoyage des guillemets
         int id = Integer.parseInt(champs[0].replaceAll("^\"|\"$", ""));
         String titre = champs[1].replaceAll("^\"|\"$", "");
         String dateDebutStr = champs[2].replaceAll("^\"|\"$", "");

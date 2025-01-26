@@ -2,52 +2,98 @@ package controllers;
 
 import models.AbstractEntity;
 import views.AbstractView;
-import models.AbstractModelRepository;
+import models.AbstractRepository;
+import utils.AbstractFileUtil;
 
-/**
- * Classe abstraite représentant un contrôleur général pour gérer les
- * interactions
- * entre la vue et le modèle dans une architecture MVC.
- *
- * @param <T> Le type des entités gérées par ce contrôleur, qui doit étendre
- *            {@link AbstractEntity}.
- */
+import java.util.Optional;
+
 public abstract class AbstractController<T extends AbstractEntity> {
 
-    /**
-     * La vue associée à ce contrôleur.
-     */
-    protected AbstractView view;
+    protected AbstractView<T> view;
 
-    /**
-     * Le référentiel de données associé à ce contrôleur.
-     */
-    protected AbstractModelRepository<T> repository;
+    protected AbstractRepository<T> repository;
 
-    /**
-     * Constructeur de la classe {@code AbstractController}.
-     *
-     * @param view       La vue associée à ce contrôleur.
-     * @param repository Le référentiel de données associé à ce contrôleur.
-     */
-    public AbstractController(AbstractView view, AbstractModelRepository<T> repository) {
+    protected AbstractFileUtil<T> fileUtil;
+
+    public AbstractController(AbstractView<T> view, AbstractRepository<T> repository) {
         this.view = view;
         this.repository = repository;
     }
 
-    /**
-     * Obtient le référentiel de données utilisé par ce contrôleur.
-     *
-     * @return Le référentiel de données.
-     */
-    public AbstractModelRepository<T> getRepository() {
+    public void ajouter() {
+        int id = repository.getTout().size() + 1;
+        T entity = view.ajouter(id);
+        repository.ajouter(entity);
+        view.afficherMessage("ASjoutée avec succès !");
+    }
+
+    public void modifier() {
+        int id = view.demanderId("modifier");
+        Optional<T> entiteExistante = repository.getParId(id);
+
+        if (entiteExistante.isPresent()) {
+            T entiteModifiee = view.modifier(entiteExistante.get());
+            repository.modifier(entiteModifiee);
+            view.afficherMessage("Entité modifiée avec succès !");
+        } else {
+            view.afficherMessage("Entité non trouvée avec l'ID : " + id);
+        }
+    }
+
+    public void supprimer() {
+        int id = view.demanderId("supprimer");
+        Optional<T> entiteExistante = repository.getParId(id);
+
+        if (entiteExistante.isPresent()) {
+            repository.supprimer(id);
+            view.afficherMessage("Entité supprimée avec succès !");
+        } else {
+            view.afficherMessage("Entité non trouvée avec l'ID : " + id);
+        }
+    }
+
+    public void afficherTous() {
+        var toutesLesEntites = repository.getTout();
+        view.afficherTous(toutesLesEntites);
+    }
+
+    public void afficherDetails() {
+        int id = view.demanderId("");
+        Optional<T> entite = repository.getParId(id);
+
+        if (entite.isPresent()) {
+            view.afficherDetails(entite.get());
+        } else {
+            view.afficherMessage("Entité non trouvée avec l'ID : " + id);
+        }
+    }
+
+    public AbstractRepository<T> getRepository() {
         return repository;
     }
 
-    /**
-     * Méthode abstraite devant être implémentée par les classes dérivées pour
-     * exécuter
-     * la logique principale du contrôleur.
-     */
-    public abstract void executer();
+    public void executer() {
+        boolean running = true;
+
+        while (running) {
+            String choix = view.afficherMenuEtLireChoix();
+
+            switch (choix) {
+                case "1" -> ajouter();
+                case "2" -> modifier();
+                case "3" -> supprimer();
+                case "4" -> afficherTous();
+                case "5" -> afficherDetails();
+                case "0" -> running = false;
+                default -> view.afficherMessage("Option invalide. Veuillez réessayer.");
+            }
+        }
+
+        try {
+            fileUtil.sauvegarder(repository.getTout());
+            view.afficherMessage("Données sauvegardées avec succès !");
+        } catch (Exception e) {
+            view.afficherMessage("Erreur lors de la sauvegarde : " + e.getMessage());
+        }
+    }
 }

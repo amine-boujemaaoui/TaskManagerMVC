@@ -33,7 +33,7 @@ public class MainController {
         boolean running = true;
 
         while (running) {
-            String choix = mainView.afficherMenuPrincipal();
+            String choix = mainView.afficherMenuEtLireChoix();
 
             if (choix.equals("0")) {
                 running = false;
