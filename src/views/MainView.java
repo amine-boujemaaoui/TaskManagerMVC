@@ -1,45 +1,44 @@
 package views;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 /**
- * Vue principale qui combine plusieurs sous-vues pour gérer l'affichage global.
+ * Classe représentant la vue principale de l'application.
+ * Fournit un menu principal pour naviguer entre les différentes sections de
+ * l'application
+ * telles que la gestion des tâches, des missions et des projets.
+ * 
+ * @author Le Mouel, Boujemaaoui, Laouaj
  */
-public class MainView extends AbstractView {
-
-    private final ListeTachesView listeTachesView;
-    private final CommandPanelView commandPanelView;
-    private final Scanner scanner; // Scanner partagé pour toutes les entrées utilisateur
+public class MainView {
 
     /**
-     * Constructeur pour initialiser les sous-vues de la vue principale.
+     * Scanner pour lire les entrées utilisateur.
+     */
+    protected final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Affiche le menu principal et capture le choix de l'utilisateur.
      *
-     * @param listeTachesView  la vue pour afficher la liste des tâches.
-     * @param commandPanelView la vue pour afficher les commandes disponibles.
+     * @return Le choix de l'utilisateur sous forme de chaîne.
      */
-    public MainView(ListeTachesView listeTachesView, CommandPanelView commandPanelView) {
-        this.listeTachesView = listeTachesView;
-        this.commandPanelView = commandPanelView;
-        this.scanner = new Scanner(System.in); // Initialisation du Scanner partagé
-    }
-
-    /**
-     * Affiche les sous-vues dans un ordre défini.
-     */
-    @Override
-    public void display() {
+    public String afficherMenuEtLireChoix() {
         clearConsole();
-        commandPanelView.display();
-        listeTachesView.display();
+        String[] options = {
+                "1. Gérer les tâches",
+                "2. Gérer les missions",
+                "3. Gérer les projets",
+                "0. Quitter"
+        };
+        afficherMenu("Menu principal", options);
+        return afficherEtLire("Choix");
     }
 
     /**
-     * Efface la console d'affichage.
+     * Efface la console pour une meilleure lisibilité.
+     * Compatible avec Windows et les systèmes basés sur Unix.
      */
-    private void clearConsole() {
+    public void clearConsole() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
@@ -48,83 +47,59 @@ public class MainView extends AbstractView {
                 System.out.flush();
             }
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'effacement de la console.");
+            System.out.println("Impossible de nettoyer la console.");
         }
     }
 
     /**
-     * Demande à l'utilisateur d'entrer le titre de la tâche.
+     * Affiche un menu avec un titre et une liste d'options, incluant un titre
+     * artistique.
      *
-     * @return le titre saisi par l'utilisateur.
+     * @param titre   Le titre du menu.
+     * @param options Les options disponibles dans le menu.
      */
-    public String getTitreTache() {
-        System.out.print("Entrez le titre de la tâche : ");
-        return scanner.nextLine(); // Utilise le scanner partagé
+    public void afficherMenu(String titre, String[] options) {
+        int largeur = 41;
+
+        // Affichage du titre artistique
+        System.out.println(
+                "████████╗ █████╗ ███████╗██╗  ██╗███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗██████╗ ███╗   ███╗██╗   ██╗ ██████╗\r\n"+
+                "╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝██╔══██╗████╗ ████║██║   ██║██╔════╝\r\n"+
+                "   ██║   ███████║███████╗█████╔╝ ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██████╔╝██╔████╔██║██║   ██║██║     \r\n"+
+                "   ██║   ██╔══██║╚════██║██╔═██╗ ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██╔══██╗██║╚██╔╝██║╚██╗ ██╔╝██║     \r\n"+
+                "   ██║   ██║  ██║███████║██║  ██╗██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝███████╗██║  ██║██║ ╚═╝ ██║ ╚████╔╝ ╚██████╗\r\n"+
+                "   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═══╝   ╚═════╝\r\n"+
+                "\r\n");
+
+        // Affichage du menu    
+        System.out.println("┌" + "─".repeat(largeur - 2) + "┐");
+        System.out.printf("│ %-37s │%n", titre);
+        System.out.println("├" + "─".repeat(largeur - 2) + "┤");
+
+        for (String option : options) {
+            System.out.printf("│ %-37s │%n", option);
+        }
+
+        System.out.println("└" + "─".repeat(largeur - 2) + "┘");
     }
 
     /**
-     * Demande à l'utilisateur d'entrer la description de la tâche.
+     * Affiche un message et lit l'entrée utilisateur.
      *
-     * @return la description saisie par l'utilisateur.
+     * @param message Le message à afficher.
+     * @return La chaîne saisie par l'utilisateur.
      */
-    public String getDescriptionTache() {
-        System.out.print("Entrez la description : ");
-        return scanner.nextLine(); // Utilise le scanner partagé
+    public String afficherEtLire(String message) {
+        System.out.println(message);
+        return scanner.nextLine();
     }
 
     /**
      * Affiche un message à l'utilisateur.
      *
-     * @param message le message à afficher.
+     * @param message Le message à afficher.
      */
     public void afficherMessage(String message) {
         System.out.println(message);
-    }
-
-    /**
-     * Demande à l'utilisateur d'entrer l'index de la tâche à supprimer.
-     *
-     * @return l'index de la tâche saisi par l'utilisateur.
-     */
-    public int getIndexTache() {
-        System.out.print("Entrez l'index de la tâche à supprimer : ");
-        try {
-            return Integer.parseInt(scanner.nextLine()); // Utilise le scanner partagé
-        } catch (NumberFormatException e) {
-            System.out.println("Entrée invalide. Veuillez entrer un nombre.");
-            return -1; // Retourne une valeur invalide pour signaler une erreur
-        }
-    }
-
-    public LocalDate getEcheance() {
-        System.out.print("Entrez la date d'échéance (format: AAAA-MM-JJ) ou laissez vide pour aucune : ");
-        String input = scanner.nextLine();
-
-        if (input.trim().isEmpty()) {
-            return null; // Pas de date d'échéance
-        }
-
-        try {
-            return LocalDate.parse(input.trim(), DateTimeFormatter.ISO_LOCAL_DATE);
-        } catch (DateTimeParseException e) {
-            System.out.println("Format invalide. Veuillez entrer une date au format AAAA-MM-JJ.");
-            return getEcheance(); // Relance la saisie
-        }
-    }
-
-    public boolean getStatut() {
-        System.out.print("Marquer la tâche comme terminée ? (oui/non) : ");
-        String input = scanner.nextLine().trim().toLowerCase();
-        return input.equals("oui"); // Retourne true si l'utilisateur tape "oui", sinon false
-    }
-
-    /**
-     * Capture l'entrée utilisateur via le panneau de commandes.
-     *
-     * @return une chaîne représentant l'entrée utilisateur.
-     */
-    @Override
-    public String getInput() {
-        return commandPanelView.getInput();
     }
 }
