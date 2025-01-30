@@ -1,6 +1,9 @@
 package models.Repositories;
 
+import java.util.Optional;
+
 import models.Entities.Projet;
+import models.Entities.Tache;
 
 /**
  * Référentiel spécifique pour la gestion des projets.
@@ -29,5 +32,20 @@ public class ProjetRepository extends AbstractRepository<Projet> {
      */
     public ProjetRepository(String nomFichier) {
         super(nomFichier);
+    }
+
+    /**
+     * Recherche un projet par son nom.
+     *
+     * @param nom Le nom du projet à rechercher.
+     * @return Le projet correspondant au nom spécifié, ou {@code null} si aucun
+     *         projet n'est trouvé.
+     */
+    public void lierTacheAProjet(int idProjet, Tache tache) {
+        Optional<Projet> projetOpt = getParId(idProjet);
+        if (projetOpt.isPresent()) {
+            projetOpt.get().ajouterTache(tache);
+            modifier(projetOpt.get());
+        }
     }
 }

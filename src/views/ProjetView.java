@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.Entities.Mission;
 import models.Entities.Projet;
+import models.Entities.Tache;
 
 /**
  * Classe responsable des interactions utilisateur pour les projets.
@@ -120,7 +121,16 @@ public class ProjetView extends AbstractView<Projet> {
             System.out.printf("│ %-39s │%n", ligne);
         }
 
-        System.out.println("└─────────────────────────────────────────┘");
+        System.out.println("├────┬────────────────────────────────────┤");
+
+        for (Tache tache : projet.getTaches()) {
+            String idTache = String.format("%2d", tache.getId());
+            String titreTache = tronquer(tache.getTitre(), 34);
+
+            System.out.printf("│ %-2s │ %-34s │%n", idTache, titreTache);
+        }
+
+        System.out.println("└────┴────────────────────────────────────┘");
         afficherEtLire("Appuyez sur Entrée pour revenir au menu...");
     }
 

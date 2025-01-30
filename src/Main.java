@@ -43,7 +43,7 @@ public class Main {
         // Initialisation des contrôleurs pour les tâches, missions et projets
         TacheController tacheController = new TacheController(tacheView, tacheRepository);
         MissionController missionController = new MissionController(missionView, missionRepository);
-        ProjetController projetController = new ProjetController(projetView, projetRepository, missionController);
+        ProjetController projetController = new ProjetController(projetView, projetRepository, missionController, tacheController);
 
         // Initialisation du contrôleur principal pour gérer les interactions utilisateur
         MainController mainController = new MainController();

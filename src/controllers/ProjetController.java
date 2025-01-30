@@ -2,6 +2,7 @@ package controllers;
 
 import models.Entities.Mission;
 import models.Entities.Projet;
+import models.Entities.Tache;
 import models.Repositories.ProjetRepository;
 import utils.AbstractFileUtil;
 import utils.ProjetFileUtil;
@@ -24,6 +25,11 @@ public class ProjetController extends AbstractController<Projet> {
     private final MissionController missionController;
 
     /**
+     * Contrôleur pour gérer les tâches associées aux projets.
+     */
+    private final TacheController tacheController;
+
+    /**
      * Constructeur du contrôleur pour gérer les projets.
      * Initialise la vue et le référentiel pour les projets, ainsi que le contrôleur
      * des missions associées.
@@ -32,18 +38,21 @@ public class ProjetController extends AbstractController<Projet> {
      * @param view              La vue associée pour afficher et interagir avec les
      *                          projets.
      * @param repository        Le référentiel des projets.
-     * @param missionController Le contrôleur pour gérer les missions associées aux
-     *                          projets.
+     * @param missionController Le contrôleur pour gérer les missions associées aux projets.
+     * @param tacheController   Le contrôleur pour gérer les tâches associées aux projets.
      */
-    public ProjetController(ProjetView view, ProjetRepository repository, MissionController missionController) {
+    public ProjetController(ProjetView view, ProjetRepository repository, MissionController missionController, TacheController tacheController) {
         super(view, repository);
         this.missionController = missionController;
+        this.tacheController = tacheController;
 
         // Initialisation de l'utilitaire de fichier pour les projets
         this.fileUtil = AbstractFileUtil.getInstance(
                 ProjetFileUtil.class,
                 repository.getNomFichier(),
-                missionController.getRepository());
+                missionController.getRepository(),
+                tacheController.getRepository()
+            );
 
         try {
             // Chargement des projets depuis le fichier
@@ -160,4 +169,43 @@ public class ProjetController extends AbstractController<Projet> {
             view.afficherMessage("Projet introuvable avec l'ID : " + idProjet);
         }
     }
+
+    /**
+     * Ajoute une tâche à un projet spécifique.
+     * Demande à l'utilisateur de fournir l'ID d'un projet, puis ajoute une tâche
+     * à ce projet si celui-ci existe.
+     *
+     * @param idProjet L'identifiant du projet auquel ajouter la tâche.
+     * @param tache    La tâche à ajouter au projet.
+     */
+    public void ajouterTacheAuProjet(int idProjet, Tache tache) {
+        Optional<Projet> projetOpt = repository.getParId(idProjet);
+
+        if (projetOpt.isPresent()) {
+            Projet projet = projetOpt.get();
+            projet.ajouterTache(tache);
+            repository.modifier(projet);
+            view.afficherMessage("Tâche ajoutée au projet " + projet.getNom() + " avec succès !");
+        } else {
+            view.afficherMessage("Projet non trouvé !");
+        }
+    }
+
+    /**
+     * Gère les tâches associées à un projet.
+     * Demande à l'utilisateur de fournir l'ID d'un projet et d'une tâche, puis
+     * associe la tâche au projet si ceux-ci existent.
+     */
+    public void gererTachesProjet() {
+        int idProjet = view.demanderId("Associer une tâche");
+        int idTache = view.demanderId("Sélectionner une tâche");
+
+        Optional<Tache> tacheOpt = tacheController.getRepository().getParId(idTache);
+        if (tacheOpt.isPresent()) {
+            ajouterTacheAuProjet(idProjet, tacheOpt.get());
+        } else {
+            view.afficherMessage("Tâche non trouvée !");
+        }
+    }
+
 }

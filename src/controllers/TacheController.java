@@ -40,4 +40,23 @@ public class TacheController extends AbstractController<Tache> {
             view.afficherMessage("Erreur lors du chargement des tâches : " + e.getMessage());
         }
     }
+
+    /**
+     * Associe une tâche à un projet.
+     * Demande à l'utilisateur de sélectionner un projet existant et ajoute la tâche
+     * à la liste des tâches du projet.
+     * 
+     * @param projetController Le contrôleur pour gérer les projets.
+     */
+    public void ajouterTacheAvecProjet(ProjetController projetController) {
+        int idTache = repository.getTout().size() + 1;
+        Tache tache = view.ajouter(idTache);
+
+        int idProjet = view.demanderId("Associer la tâche à un projet");
+        projetController.ajouterTacheAuProjet(idProjet, tache);
+
+        repository.ajouter(tache);
+        view.afficherMessage("Tâche créée et associée au projet avec succès !");
+    }
+
 }

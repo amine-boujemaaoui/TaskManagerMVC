@@ -125,6 +125,24 @@ public class Projet extends AbstractEntity {
     }
 
     /**
+     * Ajoute une tâche à la liste des tâches associées au projet.
+     *
+     * @param tache La tâche à ajouter.
+     */
+    public void ajouterTache(Tache tache) {
+        taches.add(tache);
+    }
+
+    /**
+     * Supprime une tâche de la liste des tâches associées au projet.
+     *
+     * @param tache La tâche à supprimer.
+     */
+    public void supprimerTache(Tache tache) {
+        taches.remove(tache);
+    }
+
+    /**
      * Retourne une représentation textuelle du projet, incluant son
      * identifiant, son nom, sa description, la mission associée et les tâches.
      *
