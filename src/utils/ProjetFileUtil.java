@@ -104,17 +104,4 @@ public class ProjetFileUtil extends AbstractFileUtil<Projet> {
         Projet projet = new Projet(id, nom, description, mission, taches);
         return projet;
     }
-
-    /**
-     * Échappe les caractères spéciaux pour le format CSV.
-     * Cette méthode double les guillemets dans le texte pour éviter les erreurs.
-     *
-     * @param texte Le texte à échapper.
-     * @return Le texte échappé, ou une chaîne vide si le texte est null.
-     */
-    private String escapeCsv(String texte) {
-        if (texte == null)
-            return "";
-        return texte.replace("\"", "\"\""); // Doubler les guillemets pour éviter les erreurs
-    }
 }

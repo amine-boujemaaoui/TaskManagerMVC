@@ -81,23 +81,4 @@ public class TacheFileUtil extends AbstractFileUtil<Tache> {
 
         return new Tache(id, titre, description, echeance, statut);
     }
-
-    /**
-     * Échappe les caractères spéciaux pour le format CSV.
-     * <p>
-     * Cette méthode double les guillemets dans le texte pour s'assurer qu'ils sont
-     * correctement
-     * interprétés dans le format CSV. Si le texte est {@code null}, une chaîne vide
-     * est retournée.
-     * </p>
-     *
-     * @param texte Le texte à échapper.
-     * @return Le texte échappé, ou une chaîne vide si le texte est {@code null}.
-     */
-    private String escapeCsv(String texte) {
-        if (texte == null) {
-            return "";
-        }
-        return texte.replace("\"", "\"\""); // Doubler les guillemets
-    }
 }

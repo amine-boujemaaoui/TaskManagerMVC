@@ -132,4 +132,17 @@ public abstract class AbstractFileUtil<T> {
      * @return Une instance de l'entité créée à partir de la ligne CSV.
      */
     protected abstract T creerDepuisCsv(String csvLine);
+
+    /**
+     * Échappe les caractères spéciaux pour le format CSV.
+     * Cette méthode double les guillemets dans le texte pour éviter les erreurs.
+     *
+     * @param texte Le texte à échapper.
+     * @return Le texte échappé, ou une chaîne vide si le texte est null.
+     */
+    public String escapeCsv(String texte) {
+        if (texte == null)
+            return "";
+        return texte.replace("\"", "\"\""); // Doubler les guillemets pour éviter les erreurs
+    }
 }
